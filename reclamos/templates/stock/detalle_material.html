@@ -1,0 +1,39 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+    <title>Detalle Material</title>
+    <div class="reclamo">
+        <a class="btn btn-default" href="{% url 'editar_material' pk=material.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'eliminar_material' pk=material.id %}" onclick="return confirm('Eliminar material?')"><span class="glyphicon glyphicon-trash"></span></a>
+        <p></p>
+        <p><b>C&oacute;digo:</b>
+        {{ material.id|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ material.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de carga:</b>
+        {{ material.created_date|default_if_none:"-" }}</p>
+        <p><b>Art&iacute;culo:</b>
+        {{ material.descripcion|default_if_none:"-" }}</p>
+        <p><b>Unidad de medida:</b>
+        {{ material.unidad_medida|default_if_none:"-" }}</p>
+        <p><b>Categor&iacute;a:</b>
+        {{ material.categoria|default_if_none:"-" }}</p>
+        <p><b>Stock m&iacute;nimo:</b>
+        {{ material.stock_minimo|default_if_none:"-" }}</p>
+        <p><b>Stock correcto:</b>
+        {{ material.stock_correcto|default_if_none:"-" }}</p>
+        <p><b>Proveedores:</b><br>
+        {% for proveedor in material.proveedores.all %}
+            · {{ proveedor }}<br>
+        {% endfor %}
+        <br><br>
+        {% if material.imagen %}
+            <img width="50%" src="{{ material.imagen.url }}">
+        {% endif %}
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

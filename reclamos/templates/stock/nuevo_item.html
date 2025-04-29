@@ -1,0 +1,22 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <h2>Carga nuevo material</h2>
+                <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+                    <table class="nuevo_item">
+                        {{ mat_form.as_table }}
+                    </table>
+                    <p style="color:white">-</p>
+                    <button type="submit" class="btn btn-default"><b>Guardar</b></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

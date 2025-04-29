@@ -1,0 +1,29 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+    <title>Detalle Trabajo</title>
+    <div class="reclamo">
+        <a class="btn btn-default" href="{% url 'eliminar_fava' pk=fava.n_de_alta %}" onclick="return confirm('Eliminar deb. aut. FAVA?')"><span class="glyphicon glyphicon-remove"></span></a>
+        <p></p>
+        <p><b>N° de alta:</b>
+        {{ fava.n_de_alta|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ fava.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de carga:</b>
+        {{ fava.created_date|default_if_none:"-" }}</p>
+
+        <p><b>Unidad:</b>
+        {{ fava.cuenta_osebal|default_if_none:"-" }}</p>
+        <p><b>Nº tarjeta:</b>
+        {{ fava.tarjeta_fava|default_if_none:"-" }}</p>
+        <p><b>Nº socio FAVA:</b>
+        {{ fava.n_soc_fava|default_if_none:"-" }}</p>
+        <p><b>E-mail:</b>
+        {{ fava.mail|default_if_none:"-" }}</p>
+        <p><b>Teléfono:</b>
+        {{ fava.telefono|default_if_none:"-" }}</p>
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endblock %}

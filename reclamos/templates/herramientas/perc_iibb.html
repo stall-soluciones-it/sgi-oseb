@@ -1,0 +1,29 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>ARBA - Percepciones IIBB:</b></p>
+                <br>
+                <p>Ingrese el periodo que generar. Aguarde que termine el proceso y a continuación</p>
+                <p>se descargará el archivo ZIP resultante, si ocurriera un error se generará</p>
+                <p>un Log con los detalles del mismo.</p>
+                <br>
+                <p><b><u>Ingrese periodo:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="anio">Año: </label>
+                    <p><input type="text" name="anio"/></p>
+                    <label for="mes">Mes: </label>
+                    <p><input type="text" name="mes"/></p>
+                    <label for="quincena">Quincena: </label>
+                    <p><input type="text" name="quincena"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

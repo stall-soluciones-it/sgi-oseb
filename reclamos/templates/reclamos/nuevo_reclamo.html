@@ -1,0 +1,104 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+    <title>Nuevo reclamo</title>
+    {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
+        {% load static %}
+        <script src="{% static 'tablefilter/tablefilter.js' %}"></script>
+        <script language="JavaScript" type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+        <h2>Nuevo Trabajo:</h2>
+        <table>
+            <tr>
+                <td class="editar_reclamo">
+                    <p><b>Cargar reclamo:</b></p>
+                    <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+                        <table class="nuevo_reclamo">
+                            {{ rec_form.as_table }}
+                        </table>
+                        <p style="color:white">-</p>
+                        <button type="submit" class="btn btn-default"><b>Guardar</b></button>
+                    </form>
+                </td>
+                <td class="editar_reclamo">
+                    <p><b>Buscar partida </b><span style="font-size:11; color:red">(*unidades en rojo tienen trabajos realizados o pendientes) </span><b>:</b></p>
+                    {{ tabla_un|safe }}
+                    <script data-config="">
+                        var filtersConfig = {
+                        base_path: '{% static 'tablefilter/' %}',
+                        filters_row_index: 1,
+                        col_types: [
+                        'number',
+                        'number',
+                        'string',
+                        'string',
+                        'number',
+                        'string',
+                        'string',
+                        ],
+                        extensions: [{ name: 'sort' }],
+                        };
+                        var tf = new TableFilter('partidas', filtersConfig);
+                        tf.init();
+                    </script>
+                    <script>
+                        $('.unidad').click(function () {
+                            var formFields = [];
+                            var $target = $(event.target);
+                            var $row = $target.closest('tr');
+                            $row.find('td').each(function (index, el) {
+                                var fieldValue = $(el).html();
+                                switch (index) {
+                                    case 3:
+                                        formFields['calle'] = fieldValue;
+                                        break;
+                                    case 7:
+                                        formFields['partida'] = fieldValue;
+                                        break;
+                                    case 2:
+                                        formFields['apellido'] = fieldValue;
+                                        break;
+                                    case 4:
+                                        formFields['altura'] = fieldValue;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+                            fillForm(formFields);
+                        });
+                    </script>
+                    <script>
+                        function fillForm(data) {
+                            var $form = $('.nuevo_reclamo');
+                            $form.find('input').each(function () {
+                                var $input = $(this);
+                                switch ($input.attr("name")) {
+                                    case 'calle':
+                                       $input.val(capitalize(data['calle']));
+                                       break;
+                                    case 'partida':
+                                       $input.val(data['partida']);
+                                       break;
+                                    case 'apellido':
+                                       $input.val(capitalize(data['apellido']));
+                                       break;
+                                    case 'altura':
+                                       $input.val(data['altura']);
+                                       break;
+                                    default:
+                                        break;
+                                }
+                            });
+                        }
+                    </script>
+                    <script>
+                        function capitalize(s){
+                            return s.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
+                        };
+                    </script>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+    <br><br><br><br>
+{% endblock %}

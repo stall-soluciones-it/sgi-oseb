@@ -1,0 +1,18 @@
+<div class="page-header">
+    <table style="width: 100%; border: none;">
+        <tr>
+            <td rowspan="0" style="vertical-align: down; border: none;">
+                <h1><a href="/">Osebal</a></h1>
+            </td>
+            <td style="text-align: right; border: none; font-size:20px; vertical-align: bottom;">
+                {{ user.username }}
+                <a class="glyphicon glyphicon-log-out" href="{% url 'logout' %}"></a>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; border: none; font-size:10px; background-color: #30a8df; vertical-align: top;">
+                <a href="{% url 'password_change' %}">Cambiar contraseña</a>
+            </td>
+        </tr>
+    </table>
+</div>

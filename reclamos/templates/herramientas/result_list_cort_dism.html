@@ -1,0 +1,20 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Consulta estado disminución partida:</b></p>
+                <br>
+                <p>Partida:  <b>{{ partida }}</b></p>
+                <br>
+                <p>Estado: <b>{{ resultado }}</b></p>
+                <br>
+                <p>Deuda anterior al 10/2016: <b>$ {{ deuda_orig }}</b></p>
+                <p>Recargo: <b>$ {{ deuda_reca }}</b></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

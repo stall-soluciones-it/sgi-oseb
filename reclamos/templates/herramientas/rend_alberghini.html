@@ -1,0 +1,27 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Generar rendición Estudio Alberghini:</b></p>
+                <br>
+                <p>Ingrese el periodo que desea liquidar. Aguarde que termine el proceso y a continuación</p>
+                <p>se descargará el archivo Excel resultante, si ocurriera un error en el proceso se generará</p>
+                <p>un Log con los detalles.</p>
+                <br>
+                <p><b><u>Ingrese periodo:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="year">Año: </label>
+                    <p><input type="text" name="year" id="year"/></p>
+                    <label for="month">Mes: </label>
+                    <p><input type="text" name="month" id="month"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+    <title>Detalle ingreso de material</title>
+    <div class="reclamo">
+        <a class="btn btn-default" href="{% url 'editar_ingreso' pk=ingreso.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'eliminar_ingreso' pk=ingreso.id %}" onclick="return confirm('Eliminar entrada de materiales?')"><span class="glyphicon glyphicon-trash"></span></a>
+        <p></p>
+        <p><b>Ingreso ID:</b>
+        {{ ingreso.id|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ ingreso.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de egreso:</b>
+        {{ ingreso.fecha|default_if_none:"-" }}</p>
+        <p><b>Proveedor:</b>
+        {{ ingreso.proveedor|default_if_none:"-" }}</p>
+        <p><b>Nº solicitud de compra:</b>
+        {{ ingreso.n_solicitud_de_compra|default_if_none:"-" }}</p>
+        <p><b>Nº presupuesto:</b>
+        {{ ingreso.n_presupuesto|default_if_none:"-" }}</p>
+        <p><b>Nº factura:</b>
+        {{ ingreso.n_factura|default_if_none:"-" }}</p>
+        <p><b>Nº remito:</b>
+        {{ ingreso.n_remito|default_if_none:"-" }}</p>
+        <p><b>Condiciones pago:</b>
+        {{ ingreso.cond_pago|default_if_none:"-" }}</p>
+        <p><b>Solicitante:</b>
+        {% for sol in ing.solicitante.all %}
+            {{ sol.solicitante }} |
+        {% endfor %}
+        </p>
+        <p><b>Observaciones:</b>
+        {{ ingreso.observaciones_ing|default_if_none:"-" }}</p>
+        <p><b>Articulos:</b>
+            <table class="sortable">
+                <tr>
+                    <th>
+                        <div class="th_big">
+                            Material
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th_cod_mat">
+                            Cantidad
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th_ccantidad">
+                            
+                        </div>
+                    </th>
+                </tr>
+                {% for articulo in movimiento.all %}
+                <tr>
+                    <td>
+                        <div class="td_big">
+                            {{ articulo.material }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="td_cod_mat">
+                            {{ articulo.cantidad }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="td_cantidad">
+                            <a class="btn btn-default" href="{% url 'eliminar_ingreso_art' pk=articulo.pk %}" onclick="return confirm('Eliminar entrada de material?')"><span class="glyphicon glyphicon-trash"></span></a>
+                        </div>
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+        </p>
+        <a class="btn btn-default" href="{% url 'carga_articulo_in' pk=ingreso.pk %}"><b>Cargar nuevo articulo</b></a></p>
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

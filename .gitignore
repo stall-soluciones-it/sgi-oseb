@@ -1,0 +1,29 @@
+# Ignorar todo
+*
+
+# Pero no los directorios, para mantener la estructura
+!*/
+
+# Y no ignorar los archivos con extensiones específicas
+!.gitignore
+!.gitattributes
+!*.py
+!*.js
+!*.html
+
+# Ignorar archivos estos directorios y archivos especificamente
+migrations/
+__pycache__/
+.spyproject/
+uploads/
+.pylint.d/
+.idea/
+
+# Trackear especificamente estos directorios y archivos aunque estén ignorados antes
+!Parte de trabajo.pdf
+!static/
+!static/**/*
+
+# Safe zone
+dcyt.py
+sec.stall

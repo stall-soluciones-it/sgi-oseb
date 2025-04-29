@@ -1,0 +1,172 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.rrhh %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <title>Empleado</title>
+                <h2>{{ operario.n_legajo }} | {{ operario.nombre }}    <a class="btn btn-default" href="{% url 'editar_empleado' pk=operario.n_de_alta %}"><span class="glyphicon glyphicon-pencil"></span></a></h2>
+                <hr>
+                <h3>Vacaciones</h3>
+                <br>
+                <h4><b>·</b> D&iacute;as pendientes de vacaciones: <b>{{ total_pend }}</b></h4>
+                <br>
+                <h4><b>Detalle</b></h4>
+                <table class="sortable">
+                    <tr>
+                        <th>
+                            <div class="th_cod_mat">
+                                Periodo
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                D&iacute;as
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Tomados
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Pendientes
+                            </div>
+                        </th>
+                    </tr>
+                    {% for mykey, myvalue in detalle.items %}
+                    <tr>
+                        <td>
+                            <div class="td_cod_mat">
+                                <b>{{ mykey|default_if_none:"-" }}</b>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cod_mat">
+                                {{ myvalue.0|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cod_mat">
+                                {{ myvalue.1|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cod_mat">
+                                <b>{{ myvalue.2|default_if_none:"-" }}</b>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <br>
+                <hr>
+                <h4><b>Novedades</b> <a class="btn btn-default" href="{% url 'carga_novedad' pk=operario.pk %}"><b>Cargar novedad</b></a></h4>
+                <table class="sortable">
+                    <tr>
+                        <th>
+                            <div class="th_cod_mat">
+                                Fecha solicitud
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Periodo
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Desde
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Hasta
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Se reincorpora
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Cant. d&iacute;as
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Lic. completa
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_material">
+                                Observaciones
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cantidad">
+
+                            </div>
+                        </th>
+                    </tr>
+                    {% for novedad in novedades %}
+                    <tr>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.fecha_solicitud|date:'d-m-Y' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.periodo }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.desde|date:'d-m-Y' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.hasta|date:'d-m-Y' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.reincorpora|date:'d-m-Y' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.dias }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="th_cod_mat">
+                                {{ novedad.licencia_completa }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_material">
+                                {{ novedad.observaciones|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cantidad">
+                                <a class="btn btn-default" href="{% url 'editar_novedad' pk=novedad.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <br><br><br><br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

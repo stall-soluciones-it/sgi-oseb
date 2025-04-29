@@ -1,0 +1,28 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Filtra Unidades sin servicio de archivo a enviar a Pago mis Cuentas:</b></p>
+                <br>
+                <p>Ingrese el archivo original. Aguarde que termine el proceso y a continuación se descargará</p>
+                <p>un archivo ZIP conteniendo el archivo resultante y un Log con los detalles del proceso.</p>
+                <p>En caso de error solo se descargará el log informando el mismo.</p>
+                <br>
+                <p>Ingrese archivo:</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p><input type="file" name="archivo"/></p>
+                    <label for="anio">Año: </label>
+                    <p><input type="text" name="anio"/></p>
+                    <label for="mes">Mes: </label>
+                    <p><input type="text" name="mes"/></p>
+                    <p><input type="submit" value="Convertir"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

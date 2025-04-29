@@ -1,0 +1,22 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Reporte para dar de alta servicio a incobrables:</b></p>
+                <br>
+                <p>El proceso genera un archivo con el listado de unidades incobrables que han pagado</p>
+                <p>o generado un plan de pagos. Se debe revisar cada caso y dar de alta el servicio en</p>
+                <p>caso de corresponder.</p>
+                <br>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p><input type="submit" value="Generar Listado"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

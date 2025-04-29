@@ -1,0 +1,48 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <title>Listado de proveedores</title>
+                <h2>Listado de proveedores</h2>
+                <table class="sortable">
+                    <tr>
+                        <th>
+                            <div class="th_cod_mat">
+                                CUIT
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_material">
+                                Raz&oacute;n
+                            </div>
+                        </th>
+                    </tr>
+                    {% for prov in proveedores %}
+                    <tr>
+                        <td>
+                            <div class="td_cod_mat">
+                                <a href="{% url 'detalle_proveedor' pk=prov.id %}">{{ prov.cuit }}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_material">
+                                {{ prov.razon }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

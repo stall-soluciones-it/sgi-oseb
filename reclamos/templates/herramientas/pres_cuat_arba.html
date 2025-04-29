@@ -1,0 +1,27 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>ARBA - Presentación cuatrimestral (AdBSA):</b></p>
+                <br>
+                <p>Ingrese el periodo a generar. Aguarde que termine el proceso y a continuación</p>
+                <p>se descargará el archivo ZIP resultante. Si ocurriera un error se generará</p>
+                <p>un Log con los detalles del mismo.</p>
+                <br>
+                <p><b><u>Ingrese periodo:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="anio">Año: </label>
+                    <p><input type="text" name="anio" id="anio"/></p>
+                    <label for="cuatrimestre">Cuatrimestre: </label>
+                    <p><input type="text" name="cuatrimestre" id="cuatrimestre"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

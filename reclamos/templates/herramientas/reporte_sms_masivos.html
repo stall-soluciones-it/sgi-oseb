@@ -1,0 +1,31 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Reporte SMS masivos:</b></p>
+                <br>
+                <p>Ingrese la fecha del envío y el listado de partidas (archivo txt). Aguarde que termine el proceso</p>
+                <p>y a continuaciónse descargará el archivo Excel resultante, si ocurriera un error en el proceso</p>
+                <p>se generará un Log con los detalles.</p>
+                <br>
+                <p><b><u>Ingrese fecha del envío:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="year">Año: </label>
+                    <p><input type="text" name="year" id="year"/></p>
+                    <label for="month">Mes: </label>
+                    <p><input type="text" name="month" id="month"/></p>
+                    <label for="day">Día: </label>
+                    <p><input type="text" name="day" id="day"/></p>
+                    <label for="listado">Ingrese archivo txt con listado de partidas: </label>
+                    <p><input type="file" name="listado" id="listado"/></p>
+                    <p><input type="submit" value="Generar Reporte"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

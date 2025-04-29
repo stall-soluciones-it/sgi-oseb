@@ -1,0 +1,30 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Consulta de cuentas contables:</b></p>
+                <br>
+                <p>Ingrese el número del cuenta a consultar y período.</p>
+                <p>Aguarde que termine el proceso y a continuación se descargarán</p>
+                <p>los archivos resultantes, si ocurriera un error en el proceso se</p>
+                <p>generará un Log detallando el mismo.</p>
+                <br>
+                <p><b><u>Parámetros:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="cuenta">Número de cuenta: </label>
+                    <p><input type="number" name="cuenta"/></p>
+                    <label for="desde">Desde (AAAAMMDD): </label>
+                    <p><input type="number" name="desde"/></p>
+                    <label for="hasta">Hasta (AAAAMMDD): </label>
+                    <p><input type="number" name="hasta"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

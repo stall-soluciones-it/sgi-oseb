@@ -1,0 +1,26 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Reporte Descuento intereses canon:</b></p>
+                <br>
+                <p>Ingrese el periodo que desea liquidar. Aguarde que termine el proceso y a continuación se descargará</p>
+                <p>el archivo Excel resultante, si ocurriera un error en el proceso se generará un Log con los detalles del mismo.</p>
+                <br>
+                <p><b><u>Ingrese periodo:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="year">Año: </label>
+                    <p><input type="text" name="year"/></p>
+                    <label for="month">Mes: </label>
+                    <p><input type="text" name="month"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

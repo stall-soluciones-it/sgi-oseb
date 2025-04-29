@@ -1,0 +1,30 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Crea archivos para enviar a FAVA y para cargar en SISA las cobranzas:</b></p>
+                <br>
+                <p>Ingrese el archivo a enviar a PMC. Aguarde que termine el proceso y a continuación se descargará</p>
+                <p>un archivo ZIP conteniendo el archivo para enviar a FAVA y otro para cargar en SISA.</p>
+                <p>En caso de error solo se descargará el log informando el mismo.</p>
+                <br>
+                <p>Ingrese archivo:</p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p><input type="file" name="archivo"/></p>
+                    <label for="anio">Año: </label>
+                    <p><input type="text" name="anio" id="anio"/></p>
+                    <label for="mes">Mes: </label>
+                    <p><input type="text" name="mes" id="mes"/></p>
+                    <label for="dia">D&iacute;a: </label>
+                    <p><input type="text" name="dia" id="dia"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

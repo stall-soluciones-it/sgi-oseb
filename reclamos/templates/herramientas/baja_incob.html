@@ -1,0 +1,25 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Reporte para dar de alta nuevos incobrables:</b></p>
+                <br>
+                <p>Ingrese el archivo de deuda generado en SISA. Aguarde que termine el proceso</p>
+                <p>y a continuación se descargará un archivo con el listado de unidades que nunca han</p>
+                <p>registrado pagos, con más de 12 comprobantes adeudados, que no sean escuelas o</p>
+                <p>municipales . En caso de error se descargará un log informandolo.</p>
+                <br>
+                <p><b>Ingrese archivo de SISA:</b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p><input type="file" name="data_file"/></p>
+                    <p><input type="submit" value="Generar reporte"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

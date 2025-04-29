@@ -1,0 +1,32 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Informe Deuda Proveedores:</b></p>
+                <br>
+                <p>Ingrese el archivo Deuda Proveedores generado por SISA.</p>
+                <p>Aguarde que termine el proceso, a continuación se descargará el reporte resultante.</p>
+                <p>En caso de error solo se descargará un log informando el mismo.</p>
+                <br>
+                <p><b><a href="{% url 'carga_partidas_proveedores' %}">Archivo Partidas de Proveedores:</a></b> {{ partidas }}</p>
+                {% if vencido == 'si' %}
+                <p><b><a href="{% url 'carga_masivo_deuda' %}">Archivo Masivo de Deuda:</a></b> <span style="color:red">{{ masivo }}</span></p>
+                {% else %}
+                <p><b><a href="{% url 'carga_masivo_deuda' %}">Archivo Masivo de Deuda:</a></b> <span style="color:blue">{{ masivo }}</span></p>
+                {% endif %}
+                <br>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="archivo">Carga archivo Deuda Proveedores SISA: </label>
+                    <p><input type="file" name="archivo"/></p>
+
+                    <p><input type="submit" value="Generar reporte"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

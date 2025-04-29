@@ -1,0 +1,69 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+    <title>Detalle egreso de material</title>
+    <div class="reclamo">
+        <a class="btn btn-default" href="{% url 'editar_egreso' pk=egreso.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'eliminar_egreso' pk=egreso.id %}" onclick="return confirm('Eliminar salida de materiales?')"><span class="glyphicon glyphicon-trash"></span></a>
+        <p></p>
+        <p><b>Egreso ID:</b>
+        {{ egreso.id|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ egreso.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de egreso:</b>
+        {{ egreso.fecha|default_if_none:"-" }}</p>
+        <p><b>Trabajo realizado:</b>
+        {{ egreso.trabajo_realizado|default_if_none:"-" }}</p>
+        <p><b>Personal:</b>
+        {% for persona in egreso.personal.all %}
+            {{ persona }}, 
+        {% endfor %}</p>
+        <p><b>Observaciones:</b>
+        {{ egreso.observaciones_egr|default_if_none:"-" }}</p>
+        <p><b>Articulos:</b>
+            <table class="sortable">
+                <tr>
+                    <th>
+                        <div class="th_big">
+                            Material
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th_cod_mat">
+                            Cantidad
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th_cantidad">
+                            
+                        </div>
+                    </th>
+                </tr>
+                {% for articulo in movimiento.all %}
+                <tr>
+                    <td>
+                        <div class="td_big">
+                            <a href="{% url 'eliminar_egreso_art' pk=articulo.pk %}">{{ articulo.material|default_if_none:"-" }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="td_cod_mat">
+                            {{ articulo.cantidad }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="td_cantidad">
+                            <a class="btn btn-default" href="{% url 'eliminar_egreso_art' pk=articulo.pk %}" onclick="return confirm('Eliminar salida de material?')"><span class="glyphicon glyphicon-trash"></span></a>
+                        </div>
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+        <a class="btn btn-default" href="{% url 'carga_articulo_out' pk=egreso.pk %}"><b>Cargar nuevo articulo</b></a>
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

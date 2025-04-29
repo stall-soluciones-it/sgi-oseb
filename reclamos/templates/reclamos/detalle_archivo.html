@@ -1,0 +1,16 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.ver_reclamo or perms.reclamos.gsa %}
+    <title>Archivos</title>
+    <div class="reclamo">
+        <br>
+        <p><b>Archivo perteneciente a trabajo: N° {{ archivo.reclamo }}:</b></p>
+        <p><a href="/uploads/{{ archivo.archivo }}">{{ archivo.descripcion }}</a></p>
+        {% if perms.reclamos.editar_reclamo %}
+            <a class="btn btn-default" href="{% url 'eliminar_archivo' pk=archivo.pk %}" onclick="return confirm('Eliminar archivo?')"><span class="glyphicon glyphicon-trash"></span></a>
+        {% endif %}
+    </div>
+    <br><br><br><br>
+{% endif %}
+{% endblock %}

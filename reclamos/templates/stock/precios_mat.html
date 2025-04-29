@@ -1,0 +1,53 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+    <title>Detalle precios material</title>
+    <div class="reclamo">
+        <h3><b>{{ material.codigo }} | {{ material.descripcion }}</b></h3>
+        <p><b>Precios:</b>
+            <table class="sortable">
+                <tr>
+                    <th>
+                        <div class="th_fecha">
+                            Fecha
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th_big">
+                            Proveedor
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th_cod_mat">
+                            Precio
+                        </div>
+                    </th>
+                </tr>
+                {% for precio in precios.all %}
+                <tr>
+                    <td>
+                        <div class="td_fecha">
+                            {{ precio.fecha|date:'d-m-y' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="td_big">
+                            {{ precio.proveedor }}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="td_cod_mat">
+                            {{ precio.precio }}
+                        </div>
+                    </td>
+                </tr>
+               {% endfor %}
+            </table>
+        <a class="btn btn-default" href="{% url 'nuevo_precio' %}"><b>Cargar nuevo precio</b></a>
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

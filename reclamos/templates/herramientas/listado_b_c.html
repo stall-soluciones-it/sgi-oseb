@@ -1,0 +1,34 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Listados - Bomberos / Carenciados:</b></p>
+                <br>
+                <p>Ingrese los datos del listado que desea generar. Aguarde que termine el proceso y a continuación</p>
+                <p>se descargará el archivo CSV resultante, si ocurriera un error en el proceso se generará un Log</p>
+                <p>detallando el mismo.</p>
+                <br>
+                <p><b><u>Opciones listado:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="tipo">Elija un listado:</label>
+                    <select id="tipo" name="tipo">
+                      <option value="bomberos">Bomberos</option>
+                      <option value="carenciados">Carenciados</option>
+                      <option value="municipales">Municipales</option>
+                    </select>
+                    <br>
+                    <label for="anio">Año: </label>
+                    <p><input type="text" name="anio"/></p>
+                    <label for="mes">Mes: </label>
+                    <p><input type="text" name="mes"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

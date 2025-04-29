@@ -1,0 +1,37 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Generador de archivos de Libro de IVA Digital:</b></p>
+                <br>
+                <p>Ingrese los archivos solicitados. Aguarde que termine el proceso y a continuación se descargará</p>
+                <p>un archivo ZIP conteniendo los archivos resultante o un Log en caso de error con los detalles del mismo.</p>
+                <p><b>IMPORTANTE:</b> en todos los excel que se subir&aacute;n se deben eliminar todas las filas de totales.</p>
+                <p>Adem&aacute;s, los titulos de las tablas deben tener solo una fila (no importa el contenido).</p>
+                <br>
+                <p><b><u>Ingrese archivos:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="vtas">Ventas (detalle por comprobantes): </label>
+                    <p><input type="file" name="vtas"/></p>
+                    <label for="vtasa">Ventas "A": </label>
+                    <p><input type="file" name="vtasa"/></p>
+                    <label for="vtasb">Ventas "B": </label>
+                    <p><input type="file" name="vtasb"/></p>
+                    <label for="compras">Compras: </label>
+                    <p><input type="file" name="compras"/></p>
+                    <label for="periodo">Periodo (AAAAMM): </label>
+                    <p><input type="text" name="periodo"/></p>
+                    <label for="n_perc">Nº de percibido: </label>
+                    <p><input type="text" name="n_perc"/></p>
+                    <p><input type="submit" value="Procesar"/></p>
+                    <br><br><br><br><br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

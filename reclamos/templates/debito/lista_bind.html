@@ -1,0 +1,76 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <title>Listado d&eacutebitos autom&aacuteticos BIND</title>
+                <h2>Listado d&eacutebitos autom&aacuteticos BIND</h2>
+                <table class="sortable">
+                    <tr>
+                        <th>
+                            <div class="th_fecha">
+                                Fecha de alta
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_partida">
+                                Nº cuenta Osebal
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_datta">
+                                CBU
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_datta">
+                                E-mail
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_datta">
+                                Tel&eacutefono
+                            </div>
+                        </th>
+                    </tr>
+                    {% for deb in listabind %}
+                    <tr>
+                        <td>
+                            <div class="td_fecha">
+                                {{ deb.created_date|date:'d-m-y' }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_partida">
+                                <a href="{% url 'detalle_debdirect' pk=deb.n_de_alta %}">{{ deb.cuenta_osebal }}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_datta">
+                                {{ deb.cbu }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_datta">
+                                {{ deb.mail|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_datta">
+                                {{ deb.telefono|default_if_none:"-" }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

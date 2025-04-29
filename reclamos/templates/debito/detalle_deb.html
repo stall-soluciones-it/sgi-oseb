@@ -1,0 +1,28 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+    <title>Detalle d&eacute;bito directo</title>
+    <div class="reclamo">
+        <a class="btn btn-default" href="{% url 'eliminar_debdirect' pk=debdirect.n_de_alta %}" onclick="return confirm('Eliminar débito automático?')"><span class="glyphicon glyphicon-trash"></span></a>
+        <p></p>
+        <p><b>N° de alta:</b>
+        {{ debdirect.n_de_alta|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ debdirect.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de carga:</b>
+        {{ debdirect.created_date|default_if_none:"-" }}</p>
+        <p><b>Cuenta:</b>
+        {{ debdirect.cuenta_osebal|default_if_none:"-" }}</p>
+        <p><b>CBU:</b>
+        {{ debdirect.cbu|default_if_none:"-" }}</p>
+        <p><b>E-mail:</b>
+        {{ debdirect.mail|default_if_none:"-" }}</p>
+        <p><b>Teléfono:</b>
+        {{ debdirect.telefono|default_if_none:"-" }}</p>
+        <p><b>Archivo:</b>
+        <a href="/uploads/{{ debdirect.archivo }}">{{ debdirect.archivo|default_if_none:"-" }}</a></p>
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endblock %}

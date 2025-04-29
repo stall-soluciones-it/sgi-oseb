@@ -1,0 +1,212 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<title>{{ title }}</title>
+<div class="reclamo">
+    <table style="width: 1300; border: 0px solid #ffffff; border-collapse: collapse;">
+        <tr>
+            <td style="width: 65%; border: 0px solid #ffffff; border-collapse: collapse;">
+                <h2>{{ titulo }}</h2>
+            </td>
+            <td style="vertical-align:bottom; border: 0px solid #ffffff; border-collapse: collapse;">
+                <form method="get" class="form-inline">
+                    <table>
+                        <td style="border: 0px solid #ffffff; border-collapse: collapse;">
+                            <div class="form-group mb-2">
+                                {{ filter.form.fecha }}
+                            </div>
+                        </td>
+                        <td style="border: 0px solid #ffffff; border-collapse: collapse;">
+                            <div class="form-group mx-sm-3 mb-2">
+                                {{ filter.form.tipo_de_reclamo }}
+                            </div>
+                        </td>
+                        <td style="border: 0px solid #ffffff; border-collapse: collapse;">
+                            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
+                        </td>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <table class="sortable">
+        <tr>
+            <th>
+                <div class="th_fecha">
+                    Fecha
+                </div>
+            </th>
+            <th>
+                <div class="th_tipo">
+                    Tipo de Trabajo
+                </div>
+            </th>
+            <th>
+                <div class="th_apellido">
+                    Apellido
+                </div>
+            </th>
+            <th>
+                <div class="th_calle">
+                    Calle
+                </div>
+            </th>
+            <th>
+                <div class="th_altura">
+                    Altura
+                </div>
+            </th>
+            <th>
+                <div class="th_telefono">
+                    Teléfono
+                </div>
+            </th>
+            <th>
+                <div class="th_detalle">
+                    Detalle
+                </div>
+            </th>
+            <th>
+                <div class="th_estado">
+                    Estado
+                </div>
+            </th>
+            <th>
+                <div class="th_partida">
+                    Partida
+                </div>
+            </th>
+            <th>
+                <div class="th_fecha_resol">
+                    Fecha Resoluc.
+                </div>
+            </th>
+            <th>
+                <div class="th_tarea">
+                    Tarea Realizada
+                </div>
+            </th>
+            <th>
+                <div class="th_operario">
+                    Operario/s
+                </div>
+            </th>
+            <th>
+                <div class="th_notificacion">
+                    Notificación
+                </div>
+            </th>
+            <th>
+                <div class="th_comentario">
+                    Comentario
+                </div>
+            </th>
+            <th>
+                <div class="th_a_reporte">
+                    Imp.
+                </div>
+            </th>
+        </tr>
+        {% for reclamo in items %}
+        <tr>
+            <td>
+                <div class="td_fecha">
+                    {{ reclamo.fecha|date:'d-m-y'|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_tipo">
+                    <a href="{% url 'detalle_reclamo' pk=reclamo.n_de_reclamo %}">{{ reclamo.tipo_de_reclamo|default_if_none:"-" }}</a>
+                </div>
+            </td>
+            <td>
+                <div class="td_apellido">
+                    {{ reclamo.apellido|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_calle">
+                    {{ reclamo.calle|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_altura">
+                    {{ reclamo.altura|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_telefono">
+                    {{ reclamo.telefono|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_detalle">
+                    {{ reclamo.detalle|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_estado">
+                    {{ reclamo.estado|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_partida">
+                    <a href="{% url 'detalle_partida' partida=reclamo.partida %}">{{ reclamo.partida|default_if_none:"-" }}</a>
+                </div>
+            </td>
+            <td>
+                <div class="td_fecha_resol">
+                    {{ reclamo.fecha_resolucion|default_if_none:"-"|date:'d-m-y' }}
+                </div>
+            </td>
+            <td>
+                <div class="td_tarea">
+                    {{ reclamo.tarea_realizada|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_operario">
+                    {% for operario in reclamo.operario_s.all %}
+                        {{ operario }},
+                    {% endfor %}
+                </div>
+            </td>
+            <td>
+                <div class="td_notificacion">
+                    {{ reclamo.notificacion|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_comentario">
+                    {{ reclamo.comentario|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_a_reporte">
+                    {{ reclamo.a_reporte }}
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <!-- Pagination -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if items.has_previous %}
+                <a href="?page=1{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">« primera</a>
+                <a href="?page={{ items.previous_page_number }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">anterior</a>
+            {% endif %}
+
+            <span class="current">
+                | P&aacute;gina {{ items.number }} de {{ items.paginator.num_pages }} |
+            </span>
+
+            {% if items.has_next %}
+                <a href="?page={{ items.next_page_number }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">siguiente</a>
+                <a href="?page={{ items.paginator.num_pages }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">&uacute;ltima »</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+<br><br><br><br>
+{% endblock %}

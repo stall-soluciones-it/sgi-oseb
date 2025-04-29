@@ -1,0 +1,38 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+    <title>Partida</title>
+    {% if perms.reclamos.ver_reclamo %}
+        {% load static %}
+        <script src="{% static 'tablefilter/tablefilter.js' %}"></script>
+        <script language="JavaScript" type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+        <h2>Datos de Partida:</h2>
+        <table>
+            <tr>
+                <td class="editar_reclamo">
+                    <p><b>Buscar partida </b><span style="font-size:11; color:red">(*unidades en rojo tienen trabajos realizados o pendientes) </span><b>:</b></p>
+                    {{ tabla_un|safe }}
+                    <script data-config="">
+                        var filtersConfig = {
+                        base_path: '{% static 'tablefilter/' %}',
+                        filters_row_index: 1,
+                        col_types: [
+                        'number',
+                        'number',
+                        'string',
+                        'string',
+                        'number',
+                        'string',
+                        'string',
+                        ],
+                        extensions: [{ name: 'sort' }],
+                        };
+                        var tf = new TableFilter('partidas', filtersConfig);
+                        tf.init();
+                    </script>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+    <br><br><br><br>
+{% endblock %}

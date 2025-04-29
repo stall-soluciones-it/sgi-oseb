@@ -1,0 +1,13 @@
+{% extends 'reclamos/base.html' %}
+{% load static %}
+
+{% block logo %}
+    <br><br><br><br><br><img src="{% static 'img/logo.png' %}" alt="Logo" class="center" style="width:40%;">
+    {% if perms.reclamos.sarasa %}
+        <!--<script>
+            window.onload=function(){
+               var r=confirm("Que hace´ Cornikenko!!!");
+            };
+        </script>-->
+    {% endif %}
+{% endblock %}

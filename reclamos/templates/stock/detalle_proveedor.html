@@ -1,0 +1,39 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+    <title>Detalle Proveedor</title>
+    <div class="reclamo">
+        <a class="btn btn-default" href="{% url 'editar_proveedor' pk=proveedor.id %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'eliminar_proveedor' pk=proveedor.id %}" onclick="return confirm('Eliminar proveedor?')"><span class="glyphicon glyphicon-trash"></span></a>
+        <p></p>
+        <p><b>ID:</b>
+        {{ proveedor.id|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ proveedor.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de carga:</b>
+        {{ proveedor.created_date|default_if_none:"-" }}</p>
+        <p><b>CUIT:</b>
+        {{ proveedor.cuit|default_if_none:"-" }}</p>
+        <p><b>Raz&oacute;n:</b>
+        {{ proveedor.razon|default_if_none:"-" }}</p>
+        <p><b>Cond. IVA:</b>
+        {{ proveedor.cond_iva|default_if_none:"-" }}</p>
+        <p><b>Domicilio:</b>
+        {{ proveedor.domicilio|default_if_none:"-" }}</p>
+        <p><b>Mail 1:</b>
+        {{ proveedor.mail_1|default_if_none:"-" }}</p>
+        <p><b>Mail 2:</b>
+        {{ proveedor.mail_2|default_if_none:"-" }}</p>
+        <p><b>Teléfono 1:</b>
+        {{ proveedor.tel_1|default_if_none:"-" }}</p>
+        <p><b>Teléfono 2:</b>
+        {{ proveedor.tel_2|default_if_none:"-" }}</p>
+        <p><b>Contacto:</b>
+        {{ proveedor.contacto|default_if_none:"-" }}</p>
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

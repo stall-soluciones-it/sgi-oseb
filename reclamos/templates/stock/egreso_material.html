@@ -1,0 +1,31 @@
+{% extends 'reclamos/base.html' %}
+{% load static %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <h2>Carga egreso de materiales</h2>
+                <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+                    <table class="nuevo_item">
+                        {{ egr_form.as_table }}
+                        {{ egr_form.media }}
+                    </table>
+                    <p style="color:white">-</p>
+                    <button type="submit" class="btn btn-default"><b>Continuar</b></button>
+                    {% if boton is True%}
+                        <a class="btn btn-default" href="{% url 'detalle_egreso' pk=egreso.id %}"><b>Terminar</b></a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block additional_scripts %}
+    <script src="{% static 'js/autocomplete.js' %}"></script>
+{% endblock %}

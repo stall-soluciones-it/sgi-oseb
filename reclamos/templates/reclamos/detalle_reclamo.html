@@ -1,0 +1,66 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.ver_reclamo or perms.reclamos.gsa %}
+    <title>Detalle Trabajo</title>
+    <div class="reclamo">
+        {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
+            <a class="btn btn-default" href="{% url 'editar_reclamo' pk=reclamo.n_de_reclamo %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="{% url 'eliminar_reclamo' pk=reclamo.n_de_reclamo %}" onclick="return confirm('Eliminar trabajo?')"><span class="glyphicon glyphicon-trash"></span></a>
+            {% if reclamo.borrador == "No" %}
+                <p></p>
+            {% else %}
+                <a class="btn btn-default" href="{% url 'grabar_reclamo' pk=reclamo.pk %}"><span class="glyphicon glyphicon glyphicon-floppy-disk"></span></a>
+            {% endif %}
+        {% endif %}
+        <p></p>
+        <p><b>N° de trabajo:</b>
+        {{ reclamo.n_de_reclamo|default_if_none:"-" }}</p>
+        <p><b>Cargado por:</b>
+        {{ reclamo.author|default_if_none:"-" }}</p>
+        <p><b>Fecha de creación:</b>
+        {{ reclamo.created_date|default_if_none:"-" }}</p>
+        <p><b>Fecha de trabajo:</b>
+        {{ reclamo.fecha|default_if_none:"-" }}</p>
+        <p><b>Tipo de trabajo:</b>
+        {{ reclamo.tipo_de_reclamo|default_if_none:"-" }}</p>
+        <p><b>Apellido:</b>
+        {{ reclamo.apellido|default_if_none:"-" }}</p>
+        <p><b>Calle:</b>
+        {{ reclamo.calle|default_if_none:"-" }}</p>
+        <p><b>Altura:</b>
+        {{ reclamo.altura|default_if_none:"-" }}</p>
+        <p><b>Teléfono:</b>
+        {{ reclamo.telefono|default_if_none:"-" }}</p>
+        <p><b>Detalle:</b>
+        {{ reclamo.detalle|default_if_none:"-" }}</p>
+        <p><b>Estado:</b>
+        {{ reclamo.estado|default_if_none:"-" }}</p>
+        <p><b>Partida:</b>
+        {{ reclamo.partida|default_if_none:"-" }}</p>
+        <p><b>Fecha de resolución:</b>
+        {{ reclamo.fecha_resolucion|default_if_none:"-" }}</p>
+        <p><b>Tarea realizada:</b>
+        {{ reclamo.tarea_realizada|default_if_none:"-" }}</p>
+        <p><b>Operario/s:</b>
+        {% for operario in reclamo.operario_s.all %}
+            {{ operario }} |
+        {% endfor %}
+        <p><b>Notificación:</b>
+        {{ reclamo.notificacion|default_if_none:"-" }}</p>
+        <p><b>Comentario:</b>
+        {{ reclamo.comentario|default_if_none:"-" }}</p>
+        <p><b>Archivos:</b>
+        {% for archivo in reclamo.archivos.all %}
+            <a href="{% url 'detalle_archivo' pk=archivo.pk %}">{{ archivo.descripcion }} |</a>
+        {% endfor %}
+        </p>
+        {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
+            <p><a href="{% url 'carga_archivos' pk=reclamo.n_de_reclamo %}">Cargar nuevo archivo</a></p>
+        {% endif %}
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

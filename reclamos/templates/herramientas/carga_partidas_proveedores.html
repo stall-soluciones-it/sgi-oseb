@@ -1,0 +1,24 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Carga de archivo Partidas de Proveedores:</b></p>
+                <br>
+                <p>Ingrese el archivo Partidas de Proveedores.</p>
+                <p>Aguarde que termine el proceso, a continuación se descargará un log</p>
+                <p>informando el resultado.</p>
+                <br>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="archivo">Ingrese archivo Partidas de Proveedores: </label>
+                    <p><input type="file" name="archivo"/></p>
+                    <p><input type="submit" value="Cargar archivo"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

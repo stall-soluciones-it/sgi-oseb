@@ -1,0 +1,119 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+{% load static %}
+<script src="{% static 'tablefilter/tablefilter.js' %}"></script>
+<script language="JavaScript" type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <title>Listado de materiales</title>
+                <h2>Listado de materiales</h2>
+                <table class="sortable" id="tablamat">
+                    <tr>
+                        <th>
+                            <div class="th_cod_mat">
+                                C&oacute;digo
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_material">
+                                Material
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_fecha">
+                                Un. medida
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_tipo">
+                                Categor&iacute;a
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Inventario
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Estado
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_cod_mat">
+                                Precios
+                            </div>
+                        </th>
+                    </tr>
+                    {% for mat in materiales %}
+                    <tr>
+                        <td>
+                            <div class="td_cod_mat">
+                                <a href="{% url 'detalle_material' pk=mat.id %}">{{ mat.id|default_if_none:"-" }}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_material">
+                                {{ mat.descripcion|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_fecha">
+                                {{ mat.unidad_medida|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_tipo">
+                                {{ mat.categoria|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cod_mat">
+                                {{ mat.existencia|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cod_mat">
+                                {{ mat.semaforo|safe }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_cod_mat">
+                                <a class="btn btn-default" href="{% url 'listado_precios' pk=mat.pk %}">PRECIOS</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <script data-config="">
+                    var filtersConfig = {
+                    base_path: '{% static 'tablefilter/' %}',
+                    filters_row_index: 1,
+                    col_types: [
+                    'number',
+                    'string',
+                    'string',
+                    'string',
+                    'number',
+                    'string',
+                    'string',
+                    ],
+                    extensions: [{ name: 'sort' }],
+                    };
+                    var tf = new TableFilter('tablamat', filtersConfig);
+                    tf.init();
+                </script>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

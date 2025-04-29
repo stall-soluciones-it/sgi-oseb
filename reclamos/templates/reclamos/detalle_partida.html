@@ -1,0 +1,212 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+    <title>Partida</title>
+    <table class="table_datos_partida1">
+        <tr>
+            <td class="td_datos_partida1">
+                <p><b>DATOS:</b></p>
+                <p><b>• Unidad:</b>
+                {{ unidad|default_if_none:"-" }}</p>
+                <p><b>• Partida:</b>
+                {{ partida|default_if_none:"-" }}</p>
+                <p><b>• Razón:</b>
+                {{ razon|default_if_none:"-" }}</p>
+                <p><b>• Calle:</b>
+                {{ calle|default_if_none:"-" }}</p>
+                <p><b>• N°:</b>
+                {{ numero|default_if_none:"-" }}</p>
+                <p><b>• Piso:</b>
+                {{ piso|default_if_none:"-" }}</p>
+                <p><b>• Dto.:</b>
+                {{ depto|default_if_none:"-" }}</p>
+                <p><b>• Datos complementarios:</b>
+                {{ dat_complem|default_if_none:"-" }}</p>
+                <p><b>• N° de documento:</b>
+                {{ num_doc|default_if_none:"-" }}</p>
+            </td>
+            <td class="td_datos_partida1">
+                <p><b>CONTACTO:</b></p>
+                <p><b>• Teléfono:</b>
+                {{ telefono|default_if_none:"-" }}</p>
+                <p><b>• Celular:</b>
+                {{ celular|default_if_none:"-" }}</p>
+                <p><b>• Teléfono alternativo:</b>
+                {{ tel_alt|default_if_none:"-" }}</p>
+                <p><b>• Teléfono laboral:</b>
+                {{ tel_lab|default_if_none:"-" }}</p>
+                <p><b>• E-mail:</b>
+                {{ e_mail|default_if_none:"-" }}</p>
+                <p><b>• E-mail alternativo:</b>
+                {{ e_mail_alt|default_if_none:"-" }}</p>
+                <p><b>• E-mail alternativo 2:</b>
+                {{ e_mail_alt2|default_if_none:"-" }}</p>
+                <br>
+                <p><b>DEUDA:</b></p>
+                <p>Al {{ fecha_deuda|default_if_none:"-" }} <b>${{ deuda|default_if_none:"-" }}</b></p>
+            </td>
+            <td class="td_datos_partida1">
+                <p><b>OBSERVACIONES:</b></p>
+                <ul>
+                    {% for ob in obs %}
+                        <li>{{ ob }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    </table>
+    {% if ante.all %}
+    <p style="color:white">-</p>
+    <h3>Trabajos s/ partida:</h3>
+    <table class="sortable">
+        <tr>
+            <th>
+                <div class="th_n_reclamo">
+                    N°
+                </div>
+            </th>
+            <th>
+                <div class="th_fecha">
+                    Fecha
+                </div>
+            </th>
+            <th>
+                <div class="th_tipo">
+                    Tipo de Reclamo
+                </div>
+            </th>
+            <th>
+                <div class="th_apellido">
+                    Apellido
+                </div>
+            </th>
+            <th>
+                <div class="th_calle">
+                    Calle
+                </div>
+            </th>
+            <th>
+                <div class="th_altura">
+                    Altura
+                </div>
+            </th>
+            <th>
+                <div class="th_telefono">
+                    Teléfono
+                </div>
+            </th>
+            <th>
+                <div class="th_detalle">
+                    Detalle
+                </div>
+            </th>
+            <th>
+                <div class="th_estado">
+                    Estado
+                </div>
+            </th>
+            <th>
+                <div class="th_fecha_resol">
+                    Fecha Resoluc.
+                </div>
+            </th>
+            <th>
+                <div class="th_tarea">
+                    Tarea Realizada
+                </div>
+            </th>
+            <th>
+                <div class="th_operario">
+                    Operario/s
+                </div>
+            </th>
+            <th>
+                <div class="th_notificacion">
+                    Notificación
+                </div>
+            </th>
+            <th>
+                <div class="th_comentario">
+                    Comentario
+                </div>
+            </th>
+        </tr>
+        {% for reclamo in ante %}
+        <tr>
+            <td>
+                <div class="td_n_reclamo">
+                    <a href="{% url 'detalle_reclamo' pk=reclamo.n_de_reclamo %}">{{ reclamo.n_de_reclamo|default_if_none:"-" }}</a>
+                </div>
+            </td>
+            <td>
+                <div class="td_fecha">
+                    {{ reclamo.fecha|date:'d-m-y'|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_tipo">
+                    {{ reclamo.tipo_de_reclamo|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_apellido">
+                    {{ reclamo.apellido|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_calle">
+                    {{ reclamo.calle|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_altura">
+                    {{ reclamo.altura|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_telefono">
+                    {{ reclamo.telefono|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_detalle">
+                    {{ reclamo.detalle|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_estado">
+                    {{ reclamo.estado|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_fecha_resol">
+                    {{ reclamo.fecha_resolucion|default_if_none:"-"|date:'d-m-y' }}
+                </div>
+            </td>
+            <td>
+                <div class="td_tarea">
+                    {{ reclamo.tarea_realizada|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_operario">
+                    {% for operario in reclamo.operario_s.all %}
+                        {{ operario }},
+                    {% endfor %}
+                </div>
+            </td>
+            <td>
+                <div class="td_notificacion">
+                    {{ reclamo.notificacion|default_if_none:"-" }}
+                </div>
+            </td>
+            <td>
+                <div class="td_comentario">
+                    {{ reclamo.comentario|default_if_none:"-" }}
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endblock %}

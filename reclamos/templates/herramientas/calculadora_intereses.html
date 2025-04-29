@@ -1,0 +1,409 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<style type="text/css">
+.tga  {border-collapse:collapse;border-spacing:0;width:1200;}
+.tga td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:6px 20px;word-break:normal;}
+.tga th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:6px 20px;word-break:normal;}
+.tga .tg-c1l5{background-color:#333333;border-color:#333333;text-align:left;vertical-align:top}
+.tga .tg-623x{background-color:#333333;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:left;vertical-align:top}
+.tga .tg-80bf{background-color:#dae8fc;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  font-weight:bold;text-align:center;vertical-align:top}
+.tga .tg-xl30{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  font-weight:bold;text-align:center;vertical-align:top}
+.tga .tg-7tt5{background-color:#efefef;border-color:#333333;text-align:right;vertical-align:top}
+.tga .tg-10og{background-color:#333333;border-color:#333333;color:#dae8fc;font-size:24px;font-weight:bold;text-align:center;
+  vertical-align:top}
+.tga .tg-gu8g{background-color:#efefef;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:left;vertical-align:top}
+.tga .tg-9vy3{background-color:#efefef;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:right;vertical-align:top}
+.tga .tg-w3ol{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:left;vertical-align:top}
+.tga .tg-ysxy{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:right;vertical-align:top}
+
+.tgb  {border-collapse:collapse;border-spacing:0;width:1200;}
+.tgb td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:6px 20px;word-break:normal;}
+.tgb th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:6px 20px;word-break:normal;}
+.tgb .tg-623x{background-color:#333333;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:left;vertical-align:top}
+.tgb .tg-80bf{background-color:#dae8fc;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  font-weight:bold;text-align:center;vertical-align:top}
+.tgb .tg-xl30{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  font-weight:bold;text-align:center;vertical-align:top}
+.tgb .tg-255f{background-color:#333333;border-color:#333333;color:#d2e4fc;font-family:Arial, Helvetica, sans-serif !important;
+  font-size:24px;font-weight:bold;text-align:center;vertical-align:top}
+.tgb .tg-dw33{background-color:#efefef;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  font-weight:bold;text-align:center;vertical-align:top}
+.tgb .tg-skhf{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:center;vertical-align:top}
+.tgb .tg-gu8g{background-color:#efefef;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:left;vertical-align:top}
+.tgb .tg-9vy3{background-color:#efefef;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:right;vertical-align:top}
+.tgb .tg-w3ol{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:left;vertical-align:top}
+.tgb .tg-ysxy{background-color:#d7f1c3;border-color:#333333;font-family:Arial, Helvetica, sans-serif !important;font-size:14px;
+  text-align:right;vertical-align:top}
+</style>
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <h3><b>Simulador de cobranza</b></h3>
+                <form method="post" target="_blank" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="cuenta">Cuenta:&emsp;&emsp;&nbsp;</label>
+                    <input type="number" id="cuenta" name="cuenta" required>
+                    <br>
+                    <label for="condicion">Condici&oacute;n:&emsp;</label>
+                    <select id="condicion" name="condicion">
+                        <option value="consfin">Cons. Final</option>
+                        <option value="respinsc">Resp. Insc.</option>
+                    </select>
+                    <br>
+                    <label for="capital">Capital:&emsp;&emsp;&nbsp;</label>
+                    <input type="number" id="capital" name="capital" required>
+                    <br>
+                    <label for="reca">Recargo:&emsp;&nbsp;&nbsp;</label>
+                    <input type="number" id="reca" name="recargo" required>
+                    <br>
+                    <h5><b><u>Plan de pagos contrafactura</u></b></h5>
+                    <u><b>· 2 &aacute; 12 cuotas</b><br></u>
+                    <label for="anticipo1">Anticipo:&emsp;&nbsp;</label>
+                    <input type="number" id="anticipo1" name="anticipo1" min="5000" max="100000" required>
+                    <br>
+                    <label for="cuotas1">Cuotas:&emsp;&emsp;</label>
+                    <select id="cuotas1" name="cuotas1">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="3">4</option>
+                        <option value="3">5</option>
+                        <option value="3">6</option>
+                        <option value="3">7</option>
+                        <option value="3">8</option>
+                        <option value="3">9</option>
+                        <option value="3">10</option>
+                        <option value="3">11</option>
+                        <option value="3">12</option>
+                    </select>
+                    <br><br>
+                    <b><p><input type="submit" value="Validar e imprimir"/></p></b>
+                </form>
+                <b><button onclick="calcular()">Calcular</button></b>
+                <br><br>
+                <h5><b><u><span id="total">Total:</span></u></b></h5>
+                <br><br>
+                <table class="tgb">
+                <thead>
+                  <tr>
+                    <th class="tg-255f" colspan="7" rowspan="2">PLAN DE PAGOS CONTRAFACTURA</th>
+                  </tr>
+                  <tr>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="tg-623x" rowspan="18"></td>
+                    <td class="tg-80bf" colspan="3">EFECTIVO - DEBITO - TARJETA CREDITO 1 PAGO</td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x" rowspan="18"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-dw33" colspan="3" id="capitall"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-skhf" colspan="3">Cargar en SISA PP - Condonación igual a interés.</td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-80bf" colspan="2">PLAN DE PAGO CONTRAFACTURA 2 A 3 CUOTAS</td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-80bf" colspan="2">PLAN DE PAGO CONTRAFACTURA DE 4 A 12 CUOTAS</td>
+                  </tr>
+                  <tr>
+                    <td class="tg-gu8g">Desc. Intereses 70%</td>
+                    <td class="tg-9vy3" id="descint70_3-ii"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-gu8g">Desc. Intereses 30%</td>
+                    <td class="tg-9vy3" id="descint30_12-ii"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-gu8g">Total Plan</td>
+                    <td class="tg-9vy3" id="total-plani"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-gu8g">Interés financiación 48% anual</td>
+                    <td class="tg-9vy3" id="intfin48"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-gu8g">Anticipo</td>
+                    <td class="tg-9vy3" id="aanticipo1"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-gu8g">Total Plan</td>
+                    <td class="tg-9vy3" id="total-planii"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-gu8g">Cuotas</td>
+                    <td class="tg-9vy3" id="ccantcuo1"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-gu8g">Anticipo</td>
+                    <td class="tg-9vy3" id="aanticipo2"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-gu8g">Valor de la cuota</td>
+                    <td class="tg-9vy3" id="valcuo1"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-gu8g">Cuotas</td>
+                    <td class="tg-9vy3" id="ccantcuo2"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-80bf" colspan="2" id="Total1"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-gu8g">Valor de la cuota</td>
+                    <td class="tg-9vy3" id="valcuo2"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-80bf" colspan="2" id="Total2"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-xl30">DATOS A CARGAR EN SISA - PP</td>
+                    <td class="tg-xl30" colspan="2">2 a 3 cuotas</td>
+                    <td class="tg-xl30">4 a 12 cuotas</td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-w3ol">Gastos admin/interés</td>
+                    <td class="tg-ysxy" colspan="2">0.00</td>
+                    <td class="tg-ysxy" id="Gtos412"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-w3ol">Cantidad de cuotas</td>
+                    <td class="tg-ysxy" colspan="2" id="ccantcuo11"></td>
+                    <td class="tg-ysxy" id="ccantcuo21"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-w3ol">Anticipo c/ imp. y otros</td>
+                    <td class="tg-ysxy" colspan="2" id="aanticipo12"></td>
+                    <td class="tg-ysxy" id="aanticipo22"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-w3ol">Condonación c/ imp. y otros</td>
+                    <td class="tg-ysxy" colspan="2" id="cond1"></td>
+                    <td class="tg-ysxy" id="cond2"></td>
+                    <td class="tg-623x"></td>
+                  </tr>
+                  <tr>
+                    <td class="tg-623x" colspan="7"></td>
+                  </tr>
+                </tbody>
+                </table>
+                <br><br><br><br><br><br><br>
+                <script>
+                    function calcular() {
+
+                        //VARIABLES
+                        var condicion = document.getElementById("condicion").value;
+                        var capital = parseFloat(document.getElementById("capital").value);
+                        var capitall = capital;
+                        var reca = parseFloat(document.getElementById("reca").value);
+                        var coef3 = parseFloat(1.3095);
+                        var coef6 = parseFloat(1.5855);
+                        var coef12 = parseFloat(2.2956);
+
+                        //CALCULOS
+                        var total = capital + reca;
+
+                        //Pago tarjeta de credito 3 cuotas
+                        var descint70_3 = reca * (70 / 100);
+                        var prec_tarj_cuot_3;
+                        if (condicion === "consfin") {
+                            prec_tarj_cuot_3 = (total - descint70_3) * coef3 * 1.21;
+                        } else if (condicion === "respinsc") {
+                            prec_tarj_cuot_3 = (total - descint70_3) * coef3 * 1.27;
+                        }
+                        var val_cuota_3 = prec_tarj_cuot_3 / 3;
+                        var val_cuota_32 = val_cuota_3 * 1;
+                        var reca3 = prec_tarj_cuot_3 - (total - descint70_3);
+
+                        //Pago tarjeta de credito 6 cuotas
+                        var descint50_6 = reca * (50 / 100);
+                        var prec_tarj_cuot_6;
+                        if (condicion === "consfin") {
+                            prec_tarj_cuot_6 = (total - descint50_6) * coef6 * 1.21;
+                        } else if (condicion === "respinsc") {
+                            prec_tarj_cuot_6 = (total - descint50_6) * coef6 * 1.27;
+                        }
+                        var val_cuota_6 = prec_tarj_cuot_6 / 6;
+                        var val_cuota_62 = val_cuota_6 * 1;
+                        var reca6 = prec_tarj_cuot_6 - (total - descint50_6);
+
+                        //Pago tarjeta de credito 12 cuotas
+                        var descint30_12 = reca * (30 / 100);
+                        var prec_tarj_cuot_12;
+                        if (condicion === "consfin") {
+                            prec_tarj_cuot_12 = (total - descint30_12) * coef12 * 1.21;
+                        } else if (condicion === "respinsc") {
+                            prec_tarj_cuot_12 = (total - descint30_12) * coef12 * 1.27;
+                        }
+                        var val_cuota_12 = prec_tarj_cuot_12 / 12;
+                        var val_cuota_122 = val_cuota_12 * 1;
+                        var reca12 = prec_tarj_cuot_12 - (total - descint30_12);
+
+                        //DATOS A CARGAR EN SISA TARJETA DE CREDITO
+                        var recaa3;
+                        if (condicion === "consfin") {
+                            recaa3 = reca3 / 1.21;
+                        } else if (condicion === "respinsc") {
+                            recaa3 = reca3 / 1.27;
+                        }
+                        var condonacion3 = descint70_3 * 1;
+
+                        var recaa6;
+                        if (condicion === "consfin") {
+                            recaa6 = reca6 / 1.21;
+                        } else if (condicion === "respinsc") {
+                            recaa6 = reca6 / 1.27;
+                        }
+                        var condonacion6 = descint50_6 * 1;
+
+                        var recaa12;
+                        if (condicion === "consfin") {
+                            recaa12 = reca12 / 1.21;
+                        } else if (condicion === "respinsc") {
+                            recaa12 = reca12 / 1.27;
+                        }
+                        var condonacion12 = descint30_12 * 1;
+                        
+                        var anticipo1 = parseFloat(document.getElementById("anticipo1").value);
+                        var cantcuo1;
+                        var cuotas1 = document.getElementById("cuotas1").value;
+                        if (cuotas1 === "2") {
+                            cantcuo1 = 2;
+                        } else if (cuotas1 === "3") {
+                            cantcuo1 = 3;
+                        }
+
+                        var anticipo2 = parseFloat(document.getElementById("anticipo2").value);
+                        var cantcuo2;
+                        var cuotas2 = document.getElementById("cuotas2").value;
+                        if (cuotas2 === "4") {
+                            cantcuo2 = 4;
+                        } else if (cuotas2 === "5") {
+                            cantcuo2 = 5;
+                        } else if (cuotas2 === "6") {
+                            cantcuo2 = 6;
+                        } else if (cuotas2 === "7") {
+                            cantcuo2 = 7;
+                        } else if (cuotas2 === "8") {
+                            cantcuo2 = 8;
+                        } else if (cuotas2 === "9") {
+                            cantcuo2 = 9;
+                        } else if (cuotas2 === "10") {
+                            cantcuo2 = 10;
+                        } else if (cuotas2 === "11") {
+                            cantcuo2 = 11;
+                        } else if (cuotas2 === "12") {
+                            cantcuo2 = 12;
+                        }
+
+                        var intfin48;
+                        if (condicion === "consfin") {
+                            intfin48 = ((total - descint30_12) * 0.48 / 12 * cantcuo2 ) * 1.21;
+                        } else if (condicion === "respinsc") {
+                            intfin48 = ((total - descint30_12) * 0.48 / 12 * cantcuo2 ) * 1.27;
+                        }
+
+                        var gtos412;
+                        if (condicion === "consfin") {
+                            gtos412 = intfin48 / 1.21;
+                        } else if (condicion === "respinsc") {
+                            gtos412 = intfin48 / 1.27;
+                        }
+
+                        document.getElementById("total").innerHTML = "Total: " + total.toFixed(2);
+
+                        document.getElementById("descint70_3").innerHTML = descint70_3.toFixed(2);
+                        document.getElementById("descint70_3-ii").innerHTML = descint70_3.toFixed(2);
+                        document.getElementById("prec_tarj_cuot_3").innerHTML = prec_tarj_cuot_3.toFixed(2);
+                        document.getElementById("val_cuota_3").innerHTML = val_cuota_3.toFixed(2);
+                        document.getElementById("val_cuota_32").innerHTML = "3 CUOTAS DE $" + val_cuota_32.toFixed(2);
+                        document.getElementById("reca3").innerHTML = reca3.toFixed(2);
+
+                        document.getElementById("descint50_6").innerHTML = descint50_6.toFixed(2);
+                        document.getElementById("prec_tarj_cuot_6").innerHTML = prec_tarj_cuot_6.toFixed(2);
+                        document.getElementById("val_cuota_6").innerHTML = val_cuota_6.toFixed(2);
+                        document.getElementById("val_cuota_62").innerHTML = "6 CUOTAS DE $" + val_cuota_62.toFixed(2);
+                        document.getElementById("reca6").innerHTML = reca6.toFixed(2);
+
+                        document.getElementById("descint30_12").innerHTML = descint30_12.toFixed(2);
+                        document.getElementById("descint30_12-ii").innerHTML = descint30_12.toFixed(2);
+                        document.getElementById("prec_tarj_cuot_12").innerHTML = prec_tarj_cuot_12.toFixed(2);
+                        document.getElementById("val_cuota_12").innerHTML = val_cuota_12.toFixed(2);
+                        document.getElementById("val_cuota_122").innerHTML = "12 CUOTAS DE $" + val_cuota_122.toFixed(2);
+                        document.getElementById("reca12").innerHTML = reca12.toFixed(2);
+
+                        document.getElementById("recaa3").innerHTML = recaa3.toFixed(2);
+                        document.getElementById("condonacion3").innerHTML = condonacion3.toFixed(2);
+                        document.getElementById("recaa6").innerHTML = recaa6.toFixed(2);
+                        document.getElementById("condonacion6").innerHTML = condonacion6.toFixed(2);
+                        document.getElementById("recaa12").innerHTML = recaa12.toFixed(2);
+                        document.getElementById("condonacion12").innerHTML = condonacion12.toFixed(2);
+                        document.getElementById("capitall").innerHTML = "CONTADO $ " + capitall.toFixed(2);
+
+                        document.getElementById("total-plani").innerHTML = (total - descint70_3).toFixed(2);
+                        document.getElementById("aanticipo1").innerHTML = anticipo1.toFixed(2);
+                        document.getElementById("ccantcuo1").innerHTML = cantcuo1;
+                        document.getElementById("valcuo1").innerHTML = (((total - descint70_3) - anticipo1) / cantcuo1).toFixed(2);
+                        document.getElementById("Total1").innerHTML = "ANTICIPO $" + anticipo1.toFixed(2) + " + " + cantcuo1 + " CUOTAS $" + (((total - descint70_3) - anticipo1) / cantcuo1).toFixed(2);
+
+                        document.getElementById("total-planii").innerHTML = ((total - descint30_12) + intfin48).toFixed(2);
+                        document.getElementById("aanticipo2").innerHTML = anticipo2.toFixed(2);
+                        document.getElementById("ccantcuo2").innerHTML = cantcuo2;
+                        document.getElementById("valcuo2").innerHTML = ((((total - descint30_12) + intfin48) - anticipo2) / cantcuo2).toFixed(2);
+                        document.getElementById("intfin48").innerHTML = intfin48.toFixed(2);
+                        document.getElementById("Total2").innerHTML = "ANTICIPO $" + anticipo2.toFixed(2) + " + " + cantcuo2 + " CUOTAS $" + ((((total - descint30_12) + intfin48) - anticipo2) / cantcuo2).toFixed(2);
+
+                        document.getElementById("ccantcuo11").innerHTML = cantcuo1;
+                        document.getElementById("ccantcuo21").innerHTML = cantcuo2;
+                        document.getElementById("aanticipo12").innerHTML = anticipo1.toFixed(2);
+                        document.getElementById("aanticipo22").innerHTML = anticipo2.toFixed(2);
+                        document.getElementById("cond1").innerHTML = descint70_3.toFixed(2);
+                        document.getElementById("cond2").innerHTML = descint30_12.toFixed(2);
+                        document.getElementById("Gtos412").innerHTML = gtos412.toFixed(2);
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

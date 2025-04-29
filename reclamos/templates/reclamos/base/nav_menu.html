@@ -1,0 +1,111 @@
+{% if perms.reclamos.ver_reclamo %}
+    <div class="dropdown">
+        <button class="dropbtn">Trabajos <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'lista_reclamos' %}"><span class="glyphicon glyphicon-tasks"></span> Listado Trabajos</a>
+            {% if perms.reclamos.editar_reclamo %}
+                <a href="{% url 'nuevo_reclamo_r' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo</a>
+                <a href="{% url 'nuevo_reclamo' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo (c/ buscador)</a>
+            {% endif %}
+            <a href="{% url 'lista_reclamos_finalizados' %}"><span class="glyphicon glyphicon-ok"></span> Finalizados</a>
+            <a href="{% url 'lista_reclamos_pendientes' %}"><span class="glyphicon glyphicon-inbox"></span> Pendientes</a>
+            <a href="{% url 'lista_reclamos_seguir' %}"><span class="glyphicon glyphicon-forward"></span> Seguimiento</a>
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.gsa %}
+    <div class="dropdown">
+        <button class="dropbtn">Trabajos GSA <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'lista_reclamos' %}"><span class="glyphicon glyphicon-tasks"></span> Listado Trabajos</a>
+            <a href="{% url 'nuevo_reclamo_r' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo</a>
+            <a href="{% url 'nuevo_reclamo' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo (c/ buscador)</a>
+            <a href="{% url 'lista_reclamos_finalizados' %}"><span class="glyphicon glyphicon-ok"></span> Finalizados</a>
+            <a href="{% url 'lista_reclamos_pendientes' %}"><span class="glyphicon glyphicon-inbox"></span> Pendientes</a>
+            <a href="{% url 'lista_reclamos_seguir' %}"><span class="glyphicon glyphicon-forward"></span> Seguimiento</a>
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.editar_reclamo %}
+    <div class="dropdown">
+        <button class="dropbtn">Cuadrillas <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'cuadrilla_agua' %}"><span class="glyphicon glyphicon-print"></span> Agua</a>
+            <a href="{% url 'cuadrilla_cloacas' %}"><span class="glyphicon glyphicon-print"></span> Cloacas</a>
+            <a href="{% url 'cuadrilla_niv_pozos' %}"><span class="glyphicon glyphicon-print"></span> Nivelación / Pozos</a>
+            <a href="{% url 'cuadrilla_mco_tapa' %}"><span class="glyphicon glyphicon-print"></span> Marco y Tapa</a>
+            <a href="{% url 'cuadrilla_mant_cloacal' %}"><span class="glyphicon glyphicon-print"></span> Mant. Red Cloacal</a>
+            <a href="{% url 'cuadrilla_verif_fact' %}"><span class="glyphicon glyphicon-print"></span> Verif. por Facturaci&oacute;n</a>
+            <a href="{% url 'cuadrilla_serv_med' %}"><span class="glyphicon glyphicon-print"></span> Servicio Medido</a>
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.admin_tools_3 or perms.reclamos.simulador %}
+    <div class="dropdown">
+        <button class="dropbtn">Administraci&oacute;n <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            {% if perms.reclamos.admin_tools_3 %}
+                <a href="{% url 'deuda_proveedores' %}"><span class="glyphicon glyphicon-cog"></span> Deuda Proveedores</a>
+                <a href="{% url 'dto_int_canon' %}"><span class="glyphicon glyphicon-cog"></span> Dto. intereses canon</a>
+                <a href="{% url 'cons_ctas' %}"><span class="glyphicon glyphicon-cog"></span> Consulta Cuentas Contables</a>
+                <a href="{% url 'arch_inter_muni' %}"><span class="glyphicon glyphicon-cog"></span> Archivo Municipalidad</a>
+                <a href="{% url 'conversor_rbc' %}"><span class="glyphicon glyphicon-cog"></span> Conversor arch. RBC</a>
+                <a href="{% url 'listado_b_c' %}"><span class="glyphicon glyphicon-cog"></span> List. Bomberos / Carenc.</a>
+            {% endif %}
+            <a href="{% url 'reclamos_correo' %}"><span class="glyphicon glyphicon-cog"></span> Reclamos correo</a>
+            <a href="{% url 'desc_percibido' %}"><span class="glyphicon glyphicon-cog"></span> Descarga percibido</a>
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.admin_tools_1 or perms.reclamos.admin_tools_3 %}
+    <div class="dropdown">
+        <button class="dropbtn">Cobranzas ext. <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'alta_fava' %}"><span class="glyphicon glyphicon-credit-card"></span> Alta FAVA</a>
+            <a href="{% url 'alta_debdirect' %}"><span class="glyphicon glyphicon-usd"></span> Alta D&eacute;bito Directo</a>
+            <a href="{% url 'lista_deb_direct' %}"><span class="glyphicon glyphicon-usd"></span> Lista Débito Directo</a>
+            <a href="{% url 'link_pf' %}"><span class="glyphicon glyphicon-cog"></span> Generar Link de Pago</a>
+            {% if perms.reclamos.admin_tools_3 %}
+                <a href="{% url 'filtro_pmc' %}"><span class="glyphicon glyphicon-cog"></span> Filtro archivo para envío Pago mis Cuentas</a>
+                <a href="{% url 'archs_fava' %}"><span class="glyphicon glyphicon-cog"></span> Generar archivos FAVA</a>
+                <a href="{% url 'arch_bind' %}"><span class="glyphicon glyphicon-cog"></span> Generar archivos BIND</a>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.admin_tools_3 %}
+    <div class="dropdown">
+        <button class="dropbtn">Impositivo <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'sicore' %}"><span class="glyphicon glyphicon-cog"></span> Procesar arch. SICORE</a>
+            <a href="{% url 'liq_iibb' %}"><span class="glyphicon glyphicon-cog"></span> Liquidar IIBB</a>
+            <a href="{% url 'libro_iva_digital' %}"><span class="glyphicon glyphicon-cog"></span> Libro IVA digital</a>
+            <a href="{% url 'pres_cuat_arba_osebal' %}"><span class="glyphicon glyphicon-cog"></span> ARBA - Presentación cuatrimestral</a>
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.stock %}
+    <div class="dropdown">
+        <button class="dropbtn">Stock <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'ingreso_materiales' %}"><span class="glyphicon glyphicon-plus-sign"></span> Nuevo ingreso</a>
+            <a href="{% url 'listado_ingresos' %}"><span class="glyphicon glyphicon-list"></span> Listado ingresos</a>
+            <a href="{% url 'egreso_materiales' %}"><span class="glyphicon glyphicon-minus-sign"></span> Nuevo egreso</a>
+            <a href="{% url 'listado_egresos' %}"><span class="glyphicon glyphicon-list"></span> Listado egresos</a>
+            <a href="{% url 'nuevo_material' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo material</a>
+            <a href="{% url 'listado_materiales' %}"><span class="glyphicon glyphicon-list"></span> Listado materiales</a>
+            <a href="{% url 'nuevo_proveedor' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo proveedor</a>
+            <a href="{% url 'listado_proveedores' %}"><span class="glyphicon glyphicon-list"></span> Listado proveedores</a>
+            <a href="{% url 'nuevo_precio' %}"><span class="glyphicon glyphicon-plus"></span> Carga precios</a>
+        </div>
+    </div>
+{% endif %}
+{% if perms.reclamos.rrhh %}
+    <div class="dropdown">
+        <button class="dropbtn">RRHH <i class="glyphicon glyphicon-triangle-bottom"></i></button>
+        <div class="dropdown-content">
+            <a href="{% url 'nuevo_empleado' %}"><span class="glyphicon glyphicon-minus"></span> Alta empleado</a>
+            <a href="{% url 'vacaciones' %}"><span class="glyphicon glyphicon-minus"></span> Listado empleados</a>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,25 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <p><b>Generaci&oacute;n de links de pago Pago F&aacute;cil:</b></p>
+                <br>
+                <p>Ingrese los datos y se generar&aacute; el link de pago.</p>
+                <br>
+                <p><b><u>Parámetros:</u></b></p>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="barra">C&oacute;digo de barras: </label>
+                    <p><input type="number" name="barra"/></p>
+                    <label for="valido">V&aacute;lido hasta (AAAAMMDD): </label>
+                    <p><input type="number" name="valido"/></p>
+                    <p><input type="submit" value="Generar"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.stock %}
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="reclamo">
+                <title>Listado de egresos</title>
+                <h2>Listado de egresos <a href="{% url 'exportar_egresos' %}"><span class="glyphicon glyphicon-export" style="font-size: 22px;"></span></a></h2>
+                <table class="sortable">
+                    <tr>
+                        <th>
+                            <div class="th_fecha">
+                                Fecha
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_material">
+                                Trabajo realizado
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_material">
+                                Personal
+                            </div>
+                        </th>
+                        <th>
+                            <div class="th_material">
+                                Observaciones
+                            </div>
+                        </th>
+                    </tr>
+                    {% for egr in egresos %}
+                    <tr>
+                        <td>
+                            <div class="td_fecha">
+                                <a href="{% url 'detalle_egreso' pk=egr.id %}">{{ egr.fecha|date:'d-m-y' }}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_material">
+                                {{ egr.trabajo_realizado|default_if_none:"-" }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_material">
+                                {% for persona in egr.personal.all %}
+                                    {{ persona }},
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="td_material">
+                                {{ egr.observaciones_egr|default_if_none:"-" }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

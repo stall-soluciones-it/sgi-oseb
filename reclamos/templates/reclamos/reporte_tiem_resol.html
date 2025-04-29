@@ -1,0 +1,22 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.ver_reclamo %}
+    <div class="reclamo">
+        <h2>Reporte - Tiempos de resolución EN PROCESO!!!!!:</h2>
+        <img src="data:image/png;base64,{{ graphic|safe }}" alt="Grafico" class="center">
+        <div>
+            <br><br><br>
+        </div>
+        <h3>Filtro:</h3>
+        <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+            {{ rep_form.as_p }}
+            <button type="submit" class="btn btn-default" onclick="return confirm('Actualizar datos para reporte?')"><b>Actualizar</b></button>
+        </form>
+        {{ tabla|safe }}
+    </div>
+    <div>
+        <br><br><br><br>
+    </div>
+{% endif %}
+{% endblock %}

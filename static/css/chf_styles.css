@@ -1,0 +1,492 @@
+.page-header {
+    font-family: arial, sans-serif;
+    text-shadow: 1px 1px #000000;
+    background-color: #30A8DF;
+    margin-top: 0;
+    padding: 2px 15px 1px 15px;
+}
+
+.page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
+    font-family: arial, sans-serif;
+    color: #ffffff;
+    text-shadow: 2px 2px #000000;
+    font-size: 28pt;
+    margin-top: 13px;
+    text-decoration: none;
+}
+
+.content {
+    margin-left: 1px;
+}
+
+h1, h2, h3, h4 {
+    font-family: arial, sans-serif;
+    margin-top: 0px;
+}
+
+h5 {
+    font-size: 13pt;
+}
+
+h1 a, h2 a {
+    color: #30A8DF;
+    font-family: arial, sans-serif;
+}
+
+.date {
+    color: #828282;
+}
+
+.save {
+    float: right;
+}
+
+.post-form textarea, .post-form input {
+    width: 100%;
+}
+
+.top-menu, .top-menu:hover, .top-menu:visited {
+    color: #ffffff;
+    float: right;
+    font-family: arial, sans-serif;
+    font-size: 16pt;
+    margin-right: 20px;
+    margin-top: 15px;
+}
+
+.reclamo {
+    margin-top: 0px;
+}
+
+.reclamo h2 a, .reclamo h2 a:visited {
+    color: #000000;
+}
+
+.unidad {
+    cursor: pointer;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #1C81B0;
+    color: #000000;
+    border: 1px solid #000000;
+    padding: 5px;
+}
+
+table.nuevo_reclamo {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 440px;
+}
+
+table.editar_reclamo {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 800px;
+}
+
+table.editar_reclamo th {
+    color: #FFFFFF
+    background-color: ##30A8DF;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 170px;
+}
+
+table.editar_reclamo td {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 700px;
+}
+
+td {
+    border: 1px solid #000000;
+    text-align: left;
+    padding: 5px;
+}
+
+td.editar_reclamo {
+    border: 1px solid #FFFFFF;
+    text-align: left;
+    padding: 5px;
+    vertical-align: top;
+    width: 50%;
+}
+
+tr:nth-child(even) {
+    background-color: #D3ECF8;
+}
+
+.th_n_reclamo {
+    width: 25px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_n_reclamo {
+    width: 25px;
+    text-align: center;
+    font-size: medium;
+}
+
+.th_fecha {
+    width: 55px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_fecha {
+    width: 55px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_tipo {
+    width: 70px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_tipo {
+    width: 70px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_apellido {
+    width: 75px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_apellido {
+    width: 75px;
+    font-size: small;
+}
+
+.th_calle {
+    width: 80px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_calle {
+    width: 80px;
+    font-size: small;
+}
+
+.th_altura {
+    width: 40px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_altura {
+    width: 40px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_telefono {
+    width: 80px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_telefono {
+    width: 80px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_detalle {
+    width: 125px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_detalle {
+    width: 125px;
+    font-size: small;
+}
+
+.th_estado {
+    width: 80px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_estado {
+    width: 80px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_partida {
+    width: 55px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_partida {
+    width: 55px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_deuda {
+    width: 55px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_deuda {
+    width: 55px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_fecha_resol {
+    width: 55px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_fecha_resol {
+    width: 55px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_tarea {
+    width: 125px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_tarea {
+    width: 125px;
+    font-size: small;
+}
+
+.th_operario {
+    width: 75px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_operario {
+    width: 75px;
+    font-size: small;
+}
+
+.th_notificacion {
+    width: 90px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_notificacion {
+    width: 90px;
+    font-size: small;
+}
+
+.th_comentario {
+    width: 125px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_comentario {
+    width: 125px;
+    font-size: small;
+}
+
+.th_a_reporte {
+    width: 30px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_a_reporte {
+    width: 30px;
+    text-align: center;
+    font-size: small;
+}
+
+.th_datta {
+    width: 250px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_datta {
+    width: 250px;
+	text-align: right;
+    font-size: small;
+}
+
+.td_datos_partida1 {
+    width: 450px;
+    vertical-align: top;
+    border: 0px solid #FFFFFF;
+}
+
+
+
+.table_datos_partida1 {
+    width: 1300px;
+    border: 0px solid #FFFFFF;
+}
+
+.navbar {
+    border: 1px solid #156184;
+    background-color: #1C81B0;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    text-shadow: 1px 1px #000000;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: #156184;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #E9F6FC;
+    text-shadow: 0px 0px #E9F6FC;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    font-size: 14px;
+    float: none;
+    color: #0A3042;
+    padding: 6px 8px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #91D0EE;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+table#partidas td:nth-child(8) {
+    display: none;
+}
+
+table#partidas th:nth-child(8) {
+    display: none;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.th_cod_mat {
+    width: 90px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_cod_mat {
+    width: 90px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.th_material {
+    width: 250px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_material {
+    width: 250px;
+	text-align: left;
+    font-size: small;
+}
+
+.th_big {
+    width: 400px;
+    font-size: small;
+    text-align: center;
+    vertical-align: center;
+}
+
+.td_big {
+    width: 400px;
+	text-align: left;
+    font-size: small;
+}
+
+#logout-form {
+    display: inline;
+}
+
+#logout-form button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}

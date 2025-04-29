@@ -1,0 +1,13 @@
+{% extends 'reclamos/base.html' %}
+
+{% block content %}
+{% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
+    <h2>Archivo:</h2>
+    <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+        {{ arch_form }}
+        <br><br>
+        <button type="submit" class="save btn btn-default"><b>Guardar</b></button>
+        <br><br><br><br>
+    </form>
+{% endif %}
+{% endblock %}
