@@ -18,6 +18,7 @@ __pycache__/
 uploads/
 .pylint.d/
 .idea/
+settings.py
 
 # Trackear especificamente estos directorios y archivos aunque estén ignorados antes
 !Parte de trabajo.pdf
