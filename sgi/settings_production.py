@@ -3,7 +3,7 @@ import sgi.shpd_cnf as cnf
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '*']
+ALLOWED_HOSTS = ['172.16.29.129', 'plataforma.as']
 
 DATABASES = {
     'default': {
