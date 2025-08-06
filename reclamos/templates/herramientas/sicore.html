@@ -2,176 +2,106 @@
 
 {% block content %}
 <div class="content container">
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">
-                        <i class="fas fa-file-archive me-2"></i>
-                        Generación de archivos SICORE
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted mb-4">
-                        <strong>Generación de archivos SICORE con datos DB SISA</strong><br>
-                        Seleccione el período a generar. El proceso generará un archivo ZIP con los resultados. 
-                        En caso de error, se descargará un log informativo.
-                    </p>
+            <div class="reclamo">
+                <p><b>Generación de archivos SICORE con datos DB SISA:</b></p>
+                <br>
+                <p>Ingrese el período a generar. Aguarde que termine el proceso y a continuación</p>
+                <p>se descargará un archivo ZIP conteniendo los archivos resultantes.</p>
+                <p>En caso de error solo se descargará un log informando el mismo.</p>
+                <br>
+                
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
                     
-                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        {% csrf_token %}
+                    <div class="form-group">
+                        <label for="quincena">Quincena: <span style="color: red;">*</span></label>
+                        <select name="quincena" id="quincena" required>
+                            <option value="">Seleccione una quincena</option>
+                            <option value="1">1ra Quincena (1 al 15)</option>
+                            <option value="2">2da Quincena (16 al final)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mes">Mes: <span style="color: red;">*</span></label>
+                        <select name="mes" id="mes" required>
+                            <option value="">Seleccione un mes</option>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="anio">Año: <span style="color: red;">*</span></label>
+                        <input type="number" 
+                               name="anio" 
+                               id="anio" 
+                               min="2020" 
+                               max="2040" 
+                               value="{{ current_year|default:'2025' }}"
+                               placeholder="Ej: 2025"
+                               required/>
+                        <small>Rango válido: 2020 - 2040</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Generar Archivos"/>
+                    </div>
+                </form>
+                
+                <script>
+                // Establecer mes y año actuales por defecto
+                document.addEventListener('DOMContentLoaded', function() {
+                    const fecha = new Date();
+                    const mesActual = fecha.getMonth() + 1;
+                    const anioActual = fecha.getFullYear();
+                    
+                    // Preseleccionar mes actual si está en el rango
+                    const selectMes = document.getElementById('mes');
+                    if (selectMes.querySelector(`option[value="${mesActual}"]`)) {
+                        selectMes.value = mesActual;
+                    }
+                    
+                    // Establecer año actual si está en el rango
+                    const inputAnio = document.getElementById('anio');
+                    if (anioActual >= 2020 && anioActual <= 2040) {
+                        inputAnio.value = anioActual;
+                    }
+                    
+                    // Validación adicional en el cliente
+                    document.querySelector('form').addEventListener('submit', function(e) {
+                        const quincena = document.getElementById('quincena').value;
+                        const mes = document.getElementById('mes').value;
+                        const anio = document.getElementById('anio').value;
                         
-                        <div class="row g-3">
-                            <!-- Quincena -->
-                            <div class="col-md-4">
-                                <label for="quincena" class="form-label fw-bold">
-                                    <i class="fas fa-calendar-day me-1"></i>Quincena
-                                </label>
-                                <select name="quincena" id="quincena" class="form-select" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="1">Primera quincena</option>
-                                    <option value="2">Segunda quincena</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Seleccione una quincena válida.
-                                </div>
-                            </div>
-                            
-                            <!-- Mes -->
-                            <div class="col-md-4">
-                                <label for="mes" class="form-label fw-bold">
-                                    <i class="fas fa-calendar-alt me-1"></i>Mes
-                                </label>
-                                <select name="mes" id="mes" class="form-select" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="1">Enero</option>
-                                    <option value="2">Febrero</option>
-                                    <option value="3">Marzo</option>
-                                    <option value="4">Abril</option>
-                                    <option value="5">Mayo</option>
-                                    <option value="6">Junio</option>
-                                    <option value="7">Julio</option>
-                                    <option value="8">Agosto</option>
-                                    <option value="9">Septiembre</option>
-                                    <option value="10">Octubre</option>
-                                    <option value="11">Noviembre</option>
-                                    <option value="12">Diciembre</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Seleccione un mes válido.
-                                </div>
-                            </div>
-                            
-                            <!-- Año -->
-                            <div class="col-md-4">
-                                <label for="anio" class="form-label fw-bold">
-                                    <i class="fas fa-calendar me-1"></i>Año
-                                </label>
-                                <input type="number" 
-                                       name="anio" 
-                                       id="anio" 
-                                       class="form-control" 
-                                       min="2020" 
-                                       max="2040" 
-                                       value="{{ current_year|default:'2025' }}"
-                                       required>
-                                <div class="invalid-feedback">
-                                    Ingrese un año válido (2020-2040).
-                                </div>
-                            </div>
-                        </div>
+                        if (!quincena || !mes || !anio) {
+                            e.preventDefault();
+                            alert('Por favor, complete todos los campos obligatorios.');
+                            return false;
+                        }
                         
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-success btn-lg w-100" id="generateBtn">
-                                    <i class="fas fa-cog me-2"></i>
-                                    Generar Archivos SICORE
-                                    <span class="spinner-border spinner-border-sm ms-2 d-none" id="loadingSpinner"></span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Información adicional -->
-                        <div class="alert alert-info mt-3" role="alert">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Importante:</strong> El proceso puede demorar unos minutos. No cierre la ventana hasta completar la descarga.
-                        </div>
-                    </form>
-                </div>
+                        if (anio < 2020 || anio > 2040) {
+                            e.preventDefault();
+                            alert('El año debe estar entre 2020 y 2040.');
+                            return false;
+                        }
+                    });
+                });
+                </script>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-// Validación del formulario y mejoras de UX
-(function() {
-    'use strict';
-    
-    // Establecer mes actual por defecto
-    const currentMonth = new Date().getMonth() + 1;
-    document.getElementById('mes').value = currentMonth;
-    
-    // Validación Bootstrap
-    const form = document.querySelector('.needs-validation');
-    const submitBtn = document.getElementById('generateBtn');
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    
-    form.addEventListener('submit', function(event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
-            // Mostrar spinner de carga
-            submitBtn.disabled = true;
-            loadingSpinner.classList.remove('d-none');
-            submitBtn.innerHTML = '<i class="fas fa-cog fa-spin me-2"></i>Generando... <span class="spinner-border spinner-border-sm ms-2"></span>';
-        }
-        form.classList.add('was-validated');
-    });
-    
-    // Resetear estado del botón si hay errores del servidor
-    window.addEventListener('load', function() {
-        submitBtn.disabled = false;
-        loadingSpinner.classList.add('d-none');
-        submitBtn.innerHTML = '<i class="fas fa-cog me-2"></i>Generar Archivos SICORE';
-    });
-})();
-</script>
-
-<style>
-.card {
-    border: none;
-    border-radius: 10px;
-}
-
-.card-header {
-    border-radius: 10px 10px 0 0 !important;
-}
-
-.form-select:focus,
-.form-control:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
-
-.btn-success {
-    background: linear-gradient(45deg, #28a745, #20c997);
-    border: none;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.btn-success:hover {
-    background: linear-gradient(45deg, #218838, #1ea87a);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.alert-info {
-    border-left: 4px solid #0dcaf0;
-    border-radius: 0 8px 8px 0;
-}
-</style>
-
 {% endblock %}

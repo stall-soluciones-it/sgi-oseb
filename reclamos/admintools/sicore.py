@@ -131,7 +131,7 @@ def process_sicore(quincena, mes, anio):
         tpo_doc = '80' # fijo
         num_doc = str(dic['cuit'])[:20].zfill(20)  # '00000000030717406881'  # cuit.z20ret_gan
         num_cert = str(dic['numero'])[:14].zfill(14)  # '00000000000821'  # numero.z20ret_gan
-        linea_comp = f"{cod_comp}{fec_emi_com}{num_com}{imp_com}{cod_imp}{cod_reg}{cod_op}{base_calc}{fec_emi_ret}{cod_con}{ret_prac}{imp_ret}{perc_exc}{fec_pub}{tpo_doc}{num_doc}{num_cert}\n"
+        linea_comp = f"{cod_comp}{fec_emi_com}{num_com}{imp_com}{cod_imp}{cod_reg}{cod_op}{base_calc}{fec_emi_ret}{cod_con}{ret_prac}{imp_ret}{perc_exc}{fec_pub}{tpo_doc}{num_doc}{num_cert}"
         arch_comp.append(linea_comp)
 
     # AAAAMMQ_OSEBAL_ssuj_retQMMAA.txt
@@ -145,7 +145,7 @@ def process_sicore(quincena, mes, anio):
         provincia = provincias[str(proveedores[proveedor]['provincia'])][:2].zfill(2)  # '01' z10provincia (BA, CA...)
         cod_pos = clean_txt(str(proveedores[proveedor]['cod_pos']))[:8].ljust(8)  # '7600    ' z10proveedor.cod_pos
         tipo_doc = '80'  # fijo
-        linea_suj = f"{n_doc}{razon}{domicilio}{localidad}{provincia}{cod_pos}{tipo_doc}\n"
+        linea_suj = f"{n_doc}{razon}{domicilio}{localidad}{provincia}{cod_pos}{tipo_doc}"
         arch_suj.append(linea_suj)
 
     # Generar nombres de archivo basados en las fechas
