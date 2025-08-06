@@ -163,24 +163,19 @@ def filtro_pmc(request):
 
 @login_required
 def sicore(request):
-    """Renderiza página del Filtro de archivo a subir a PMC."""
-    if request.method == "POST" and request.FILES.get('filepath', False) is False:
-        if ("archivo1" not in request.FILES) or (str(request.POST['quincena']) == '') \
-                or ("archivo2" not in request.FILES):
+    """Renderiza página degeneración archivos SICORE."""
+    if request.method == "POST":
+        if (str(request.POST['quincena']) == '') \
+                or (str(request.POST['mes']) == '') \
+                    or (str(request.POST['anio']) == ''):
             return render(request, 'herramientas/sicore.html')
         try:
             quincena = int(request.POST["quincena"])
+            mes = int(request.POST["mes"])
+            anio = int(request.POST["anio"])
         except (TypeError, ValueError):
             return render(request, 'herramientas/sicore.html')
-        archivo1 = request.FILES["archivo1"]
-        archivo2 = request.FILES["archivo2"]
-        name1 = str(archivo1.name)
-        name2 = str(archivo2.name)
-        path1 = default_storage.save(r'tmp/' + archivo1.name, ContentFile(archivo1.read()))
-        tmp_file1 = os.path.join(settings.MEDIA_ROOT, path1)
-        path2 = default_storage.save(r'tmp/' + archivo2.name, ContentFile(archivo2.read()))
-        tmp_file2 = os.path.join(settings.MEDIA_ROOT, path2)
-        archivo = process_sicore(quincena, tmp_file1, tmp_file2, name1, name2)
+        archivo = process_sicore(quincena, mes, anio)
         return FileResponse(open(archivo, 'rb'),
                             content_type='application/txt', as_attachment=True)
     return render(request, 'herramientas/sicore.html')
