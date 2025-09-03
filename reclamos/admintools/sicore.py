@@ -169,11 +169,11 @@ def process_sicore(quincena, mes, anio):
         try:
             with io.open(settings.MEDIA_ROOT + r'/sicore/' + nombre_comp,
                          'wt', newline='\r\n') as arch1:
-                arch1.write('\n'.join(arch_comp))
+                arch1.write('\n'.join(arch_comp) + '\n')
 
             with io.open(settings.MEDIA_ROOT + r'/sicore/' + nombre_suj,
                          'wt', newline='\r\n') as arch2:
-                arch2.write('\n'.join(arch_suj))
+                arch2.write('\n'.join(arch_suj) + '\n')
         except Exception as expt:
             log.append('Error al crear los archivos: ' + repr(expt))
             error = True
@@ -201,5 +201,5 @@ def process_sicore(quincena, mes, anio):
     elif error is True:
         with io.open(settings.MEDIA_ROOT + r'/sicore/Log_' + 'error' + '.txt',
                      'wt', newline='\r\n') as log_arch:
-            log_arch.write('\n'.join(log))
+            log_arch.write('\n'.join(log) + '\n')
         return settings.MEDIA_ROOT + r'/sicore/Log_' + 'error' + '.txt'
