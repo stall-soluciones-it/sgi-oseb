@@ -73,7 +73,7 @@ class Materiales(models.Model):
     @property
     def semaforo(self):
         try:
-            existencia = int(MovimientoMateriales.objects.filter(material=self.pk)
+            existencia = int(MovimientoMateriales.objects.filter(material=self.pk, eliminado='Activo')
                              .aggregate(stock=Sum('cantidad'))['stock'])
         except TypeError:
             return '<span>Error</span>'
