@@ -56,7 +56,7 @@
                         </td>
                         <td>
                             <div class="td_material">
-                                {{ empleado.nombre|default_if_none:"-" }}
+                                <span {% if empleado.fecha_egreso %}style="color: red;"{% endif %}>{{ empleado.nombre|default_if_none:"-" }}</span>
                             </div>
                         </td>
                         <td>
