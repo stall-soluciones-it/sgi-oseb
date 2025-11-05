@@ -20,7 +20,14 @@ def calculo_dias(fecha_ingreso, hoy_o_dia_a_calcular, fecha_egreso):
     # Creo listado de ANIOS "CALENDARIO" a incluir en calculo.
     anios = []
     anio_ing = fecha_ingreso.year
-    while anio_ing <= hoy.year:
+
+
+    if fecha_egreso is None:
+        anio_hasta = hoy.year
+    else:
+        anio_hasta = fecha_egreso.year
+
+    while anio_ing <= anio_hasta:
         anios.append(anio_ing)
         anio_ing += 1
 
