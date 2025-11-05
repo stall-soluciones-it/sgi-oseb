@@ -8,6 +8,17 @@
             <div class="reclamo">
                 <title>Vacaciones</title>
                 <h2>Vacaciones</h2>
+                
+                <!-- Filtro de empleados -->
+                <div style="margin-bottom: 15px;">
+                    <label for="filtroEmpleados">Mostrar: </label>
+                    <select id="filtroEmpleados" onchange="filtrarEmpleados()">
+                        <option value="todos">Todos</option>
+                        <option value="activos">Activos</option>
+                        <option value="baja">Baja</option>
+                    </select>
+                </div>
+                
                 <table class="sortable">
                     <tr>
                         <th>
@@ -37,7 +48,7 @@
                         </th>
                     </tr>
                     {% for empleado in empleados %}
-                    <tr>
+                    <tr class="fila-empleado" data-estado="{% if empleado.fecha_egreso %}baja{% else %}activo{% endif %}">
                         <td>
                             <div class="td_tipo">
                                 <a href="{% url 'detalle_empleado' pk=empleado.pk %}">{{ empleado.n_legajo|default_if_none:"-" }}</a>
@@ -74,5 +85,27 @@
         </div>
     </div>
 </div>
+
+<script>
+function filtrarEmpleados() {
+    var filtro = document.getElementById('filtroEmpleados').value;
+    var filas = document.getElementsByClassName('fila-empleado');
+    
+    for (var i = 0; i < filas.length; i++) {
+        var estado = filas[i].getAttribute('data-estado');
+        
+        if (filtro === 'todos') {
+            filas[i].style.display = '';
+        } else if (filtro === 'activos' && estado === 'activo') {
+            filas[i].style.display = '';
+        } else if (filtro === 'baja' && estado === 'baja') {
+            filas[i].style.display = '';
+        } else {
+            filas[i].style.display = 'none';
+        }
+    }
+}
+</script>
+
 {% endif %}
 {% endblock %}
