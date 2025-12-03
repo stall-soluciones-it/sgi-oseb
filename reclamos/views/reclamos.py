@@ -27,7 +27,7 @@ from reportlab.lib.enums import TA_CENTER  # noqa
 from reportlab.pdfgen import canvas  # noqa
 import sgi.shpd_cnf as cnf
 from reclamos.models import (Reclamo, Tipos, Archivos, DatosCuadrilla, FiltroInformePendFin,
-                             FiltroInformeTiemResol)
+                             FiltroInformeTiemResol, CacheUnidadSISA)
 from reclamos.forms import (ReclamoForm, ArchivoForm, CuadrillaAgua, CuadrillaCloaca, CuadrillaNivPozos,
                             CuadrillaMcoTapa, CuadrillaMantCloacal, CuadrillaVerifFact, CuadrillaServMed,
                             FiltroInformePendFinForm, FiltroInformeTiemResolForm)
@@ -1173,10 +1173,18 @@ def imprimir_comprobante_reclamo(request, pk):
     """Genera PDF del comprobante de reclamo."""
     reclamo = get_object_or_404(Reclamo, pk=pk)
 
-    # Obtener datos de deuda y cuenta OSEBAL si existe partida
+    # Obtener cuenta OSEBAL desde cache
+    cuenta_osebal = None
+    if reclamo.partida:
+        try:
+            cache_unidad = CacheUnidadSISA.objects.get(unidad_alt=str(reclamo.partida))
+            cuenta_osebal = int(cache_unidad.unidad)
+        except CacheUnidadSISA.DoesNotExist:
+            cuenta_osebal = None
+
+    # Obtener datos de deuda si existe partida
     mostrar_deuda = False
     fecha_deuda = None
-    cuenta_osebal = None
 
     if reclamo.partida:
         try:
@@ -1185,28 +1193,21 @@ def imprimir_comprobante_reclamo(request, pk):
             if os.path.exists(archivo_deuda):
                 fecha_deuda = datetime.datetime.fromtimestamp(os.path.getmtime(archivo_deuda))
 
-                # Leer archivo Excel de deuda (columnas A=Unidad, E=Unidad Alt., J=Total)
+                # Leer archivo Excel de deuda (columnas E=Unidad Alt., J=Total)
                 df_deuda = pd.read_excel(archivo_deuda,
                                         skiprows=[0, 1, 2, 3, 4, 5, 6, 7, 9],
-                                        usecols='A,E,J')
+                                        usecols='E,J')
 
-                # Crear diccionarios
+                # Crear diccionario de deuda
                 dict_deuda = {}
-                dict_cuenta_osebal = {}
                 for _, row in df_deuda.iterrows():
                     try:
                         unidad_alt = int(row['Unidad Alt.'])
                         # Guardar deuda si existe
                         if pd.notna(row['Total']):
                             dict_deuda[unidad_alt] = row['Total']
-                        # Guardar cuenta OSEBAL (Unidad)
-                        if pd.notna(row['Unidad']):
-                            dict_cuenta_osebal[unidad_alt] = int(row['Unidad'])
                     except (ValueError, KeyError):
                         pass
-
-                # Obtener cuenta OSEBAL de la partida
-                cuenta_osebal = dict_cuenta_osebal.get(int(reclamo.partida))
 
                 # Obtener deuda de la partida
                 deuda = dict_deuda.get(int(reclamo.partida), 0)

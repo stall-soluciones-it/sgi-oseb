@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reclamos',
     'django_cleanup.apps.CleanupConfig',
-    'django_filters'
+    'django_filters',
+    'django_crontab'
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,8 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Umbral de deuda para comprobantes
 UMBRAL_DEUDA_COMPROBANTE = 1000
+
+# Configuración de django-crontab para actualización automática de cache
+CRONJOBS = [
+    ('0 23 * * *', 'django.core.management.call_command', ['actualizar_cache_unidades']),
+]
