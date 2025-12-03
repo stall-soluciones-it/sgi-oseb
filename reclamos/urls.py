@@ -28,6 +28,8 @@ urlpatterns = [
     path('trabajos/archivos/<pk>/detalle_archivo/', views.detalle_archivo, name='detalle_archivo'),
     path('trabajos/archivos/<pk>/eliminar_archivo/', views.eliminar_archivo,
          name='eliminar_archivo'),
+    path('trabajos/<int:pk>/imprimir_comprobante/', views.imprimir_comprobante_reclamo,
+         name='imprimir_comprobante_reclamo'),
     # Cuadrillas vista.
     path('trabajos/cuadrillas/agua/', views.cuadrilla_agua, name='cuadrilla_agua'),
     path('trabajos/cuadrillas/cloacas/', views.cuadrilla_cloacas, name='cuadrilla_cloacas'),

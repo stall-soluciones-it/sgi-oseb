@@ -1166,3 +1166,115 @@ def rep_tiem_resol(request):
                   {'rep_form': rep_form,
                    'graphic': graphic,
                    'tabla': tabla})
+
+
+@login_required
+def imprimir_comprobante_reclamo(request, pk):
+    """Genera PDF del comprobante de reclamo."""
+    reclamo = get_object_or_404(Reclamo, pk=pk)
+
+    # Obtener datos de deuda y cuenta OSEBAL si existe partida
+    mostrar_deuda = False
+    fecha_deuda = None
+    cuenta_osebal = None
+
+    if reclamo.partida:
+        try:
+            # Obtener fecha del archivo masivo de deuda
+            archivo_deuda = settings.MEDIA_ROOT + r'/proveedores/deuda_masivo.xls'
+            if os.path.exists(archivo_deuda):
+                fecha_deuda = datetime.datetime.fromtimestamp(os.path.getmtime(archivo_deuda))
+
+                # Leer archivo Excel de deuda (columnas A=Unidad, E=Unidad Alt., J=Total)
+                df_deuda = pd.read_excel(archivo_deuda,
+                                        skiprows=[0, 1, 2, 3, 4, 5, 6, 7, 9],
+                                        usecols='A,E,J')
+
+                # Crear diccionarios
+                dict_deuda = {}
+                dict_cuenta_osebal = {}
+                for _, row in df_deuda.iterrows():
+                    try:
+                        unidad_alt = int(row['Unidad Alt.'])
+                        # Guardar deuda si existe
+                        if pd.notna(row['Total']):
+                            dict_deuda[unidad_alt] = row['Total']
+                        # Guardar cuenta OSEBAL (Unidad)
+                        if pd.notna(row['Unidad']):
+                            dict_cuenta_osebal[unidad_alt] = int(row['Unidad'])
+                    except (ValueError, KeyError):
+                        pass
+
+                # Obtener cuenta OSEBAL de la partida
+                cuenta_osebal = dict_cuenta_osebal.get(int(reclamo.partida))
+
+                # Obtener deuda de la partida
+                deuda = dict_deuda.get(int(reclamo.partida), 0)
+
+                # Verificar si supera el umbral
+                if deuda >= settings.UMBRAL_DEUDA_COMPROBANTE:
+                    mostrar_deuda = True
+        except Exception:
+            # Si hay error leyendo el archivo, continuar sin mostrar deuda
+            pass
+
+    # Crear PDF
+    filename = settings.PDF_ROOT + f'Comprobante_{reclamo.n_de_reclamo}.pdf'
+    c = canvas.Canvas(filename, pagesize=A4)
+    width, height = A4
+
+    # Logo de la empresa
+    logo_path = settings.STATIC_ROOT + '/img/logo.png'
+    if os.path.exists(logo_path):
+        c.drawImage(logo_path, 1, height - 100, width=180, height=90,
+                   preserveAspectRatio=True, mask='auto')
+
+    # Título del comprobante (centrado)
+    c.setFont("Helvetica-Bold", 18)
+    c.drawCentredString(width / 2, height - 100, "COMPROBANTE DE RECLAMO")
+
+    # Línea separadora
+    c.line(50, height - 120, width - 50, height - 120)
+
+    # Datos del reclamo
+    y_position = height - 140
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(50, y_position, "N° de Reclamo:")
+    c.setFont("Helvetica", 11)
+    c.drawString(180, y_position, str(reclamo.n_de_reclamo))
+
+    y_position -= 25
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(50, y_position, "Fecha:")
+    c.setFont("Helvetica", 11)
+    c.drawString(180, y_position, reclamo.created_date.strftime('%d/%m/%Y'))
+
+    y_position -= 25
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(50, y_position, "Tipo de Reclamo:")
+    c.setFont("Helvetica", 11)
+    c.drawString(180, y_position, str(reclamo.tipo_de_reclamo))
+
+    y_position -= 25
+    c.setFont("Helvetica-Bold", 11)
+    c.drawString(50, y_position, "Cuenta OSEBAL:")
+    c.setFont("Helvetica", 11)
+    c.drawString(180, y_position, str(cuenta_osebal) if cuenta_osebal else "N/A")
+
+    # Texto de periodos impagos si corresponde
+    if mostrar_deuda and fecha_deuda:
+        y_position -= 35
+        c.setFont("Helvetica-Bold", 11)
+        c.setFillColorRGB(0.8, 0, 0)  # Rojo
+        texto_deuda = f"Registra periodos impagos al {fecha_deuda.strftime('%d-%m-%Y')}"
+        c.drawString(50, y_position, texto_deuda)
+        c.setFillColorRGB(0, 0, 0)  # Volver a negro
+
+    # Línea final
+    c.line(50, y_position - 20, width - 50, y_position - 20)
+
+    # Guardar PDF
+    c.save()
+
+    # Retornar respuesta
+    return FileResponse(open(filename, 'rb'), content_type='application/pdf')

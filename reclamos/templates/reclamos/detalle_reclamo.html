@@ -7,6 +7,7 @@
         {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
             <a class="btn btn-default" href="{% url 'editar_reclamo' pk=reclamo.n_de_reclamo %}"><span class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'eliminar_reclamo' pk=reclamo.n_de_reclamo %}" onclick="return confirm('Eliminar trabajo?')"><span class="glyphicon glyphicon-trash"></span></a>
+            <a class="btn btn-default" href="{% url 'imprimir_comprobante_reclamo' pk=reclamo.n_de_reclamo %}" target="_blank"><span class="glyphicon glyphicon-print"></span> Imprimir Comprobante</a>
             {% if reclamo.borrador == "No" %}
                 <p></p>
             {% else %}

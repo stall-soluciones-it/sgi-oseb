@@ -137,3 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Logout redirect
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+# Umbral de deuda para comprobantes
+UMBRAL_DEUDA_COMPROBANTE = 1000
