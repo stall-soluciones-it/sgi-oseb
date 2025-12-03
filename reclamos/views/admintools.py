@@ -306,6 +306,14 @@ def deuda_proveedores(request):
 @login_required
 def carga_masivo_deuda(request):
     """Renderiza página carga masivo deuda."""
+    ahora = datetime.datetime.now()
+    fecha_masivo = datetime.datetime.fromtimestamp(os.path.getmtime(settings.MEDIA_ROOT +
+                                                                    r'/proveedores/' +
+                                                                    'deuda_masivo.xls'))
+    if (ahora - fecha_masivo) > datetime.timedelta(days=30):
+        vencido = 'si'
+    else:
+        vencido = 'no'
     if request.method == "POST" and request.FILES.get('filepath', False) is False:
         if "archivo" not in request.FILES:
             return render(request, 'herramientas/carga_masivo_deuda.html')
@@ -315,7 +323,8 @@ def carga_masivo_deuda(request):
         archivo = process_carga_masivo_deuda(tmp_file)
         return FileResponse(open(archivo, 'rb'),
                             content_type='application/txt', as_attachment=True)
-    return render(request, 'herramientas/carga_masivo_deuda.html')
+    return render(request, 'herramientas/carga_masivo_deuda.html',
+                  {'masivo': fecha_masivo, 'vencido': vencido})
 
 
 @login_required

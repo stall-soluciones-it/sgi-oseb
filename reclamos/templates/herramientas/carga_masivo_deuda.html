@@ -11,6 +11,11 @@
                 <p>Aguarde que termine el proceso, a continuación se descargará un log</p>
                 <p>informando el resultado.</p>
                 <br>
+                {% if vencido == 'si' %}
+                <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:red">{{ masivo }}</span></p>
+                {% else %}
+                <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:blue">{{ masivo }}</span></p>
+                {% endif %}
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <label for="archivo">Ingrese archivo Deuda Masivo SISA: </label>

@@ -45,6 +45,7 @@
         <button class="dropbtn">Administraci&oacute;n <i class="glyphicon glyphicon-triangle-bottom"></i></button>
         <div class="dropdown-content">
             {% if perms.reclamos.admin_tools_3 %}
+                <a href="{% url 'carga_masivo_deuda' %}"><span class="glyphicon glyphicon-cog"></span> Carga masivo deuda</a>
                 <a href="{% url 'deuda_proveedores' %}"><span class="glyphicon glyphicon-cog"></span> Deuda Proveedores</a>
                 <a href="{% url 'dto_int_canon' %}"><span class="glyphicon glyphicon-cog"></span> Dto. intereses canon</a>
                 <a href="{% url 'cons_ctas' %}"><span class="glyphicon glyphicon-cog"></span> Consulta Cuentas Contables</a>
