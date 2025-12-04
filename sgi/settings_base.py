@@ -143,6 +143,7 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 UMBRAL_DEUDA_COMPROBANTE = 50000
 
 # Configuración de django-crontab para actualización automática de cache
+# Se ejecuta cada hora entre las 7:00 y 15:00 hs
 CRONJOBS = [
-    ('0 23 * * *', 'django.core.management.call_command', ['actualizar_cache_unidades']),
+    ('0 7-15 * * *', 'django.core.management.call_command', ['actualizar_cache_unidades']),
 ]
