@@ -340,7 +340,8 @@ def carga_masivo_deuda(request):
 
     return render(request, 'herramientas/carga_masivo_deuda.html',
                   {'form': form, 'masivo': fecha_masivo, 'vencido': vencido,
-                   'umbral_deuda': settings.UMBRAL_DEUDA_COMPROBANTE})
+                   'umbral_deuda': settings.UMBRAL_DEUDA_COMPROBANTE,
+                   'umbral_deuda_cuadrilla': settings.UMBRAL_DEUDA_CUADRILLA})
 
 
 @login_required

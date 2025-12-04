@@ -46,7 +46,11 @@
                 </form>
                 <hr>
                 <div style="background-color: #f0f0f0; padding: 10px; border-left: 4px solid #007bff;">
-                    <p><b>Nota:</b> Se informa en los comprobantes de reclamo cuando la deuda es igual o superior a <b>${{ umbral_deuda|floatformat:0 }}</b>.</p>
+                    <p><b>Nota:</b></p>
+                    <ul>
+                        <li>Se informa en los <b>comprobantes de reclamo</b> cuando la deuda es igual o superior a <b>${{ umbral_deuda|floatformat:0 }}</b>.</li>
+                        <li>Se agrega comentario "Se entrega Estado de Cuenta" en las <b>cuadrillas de agua y cloacas</b> cuando la deuda es igual o superior a <b>${{ umbral_deuda_cuadrilla|floatformat:0 }}</b>.</li>
+                    </ul>
                 </div>
                 <br><br><br><br><br>
             </div>

@@ -142,6 +142,9 @@ LOGOUT_REDIRECT_URL = '/accounts/login/'
 # Umbral de deuda para comprobantes
 UMBRAL_DEUDA_COMPROBANTE = 50000
 
+# Umbral de deuda para mostrar comentario en cuadrillas (agua y cloacas)
+UMBRAL_DEUDA_CUADRILLA = 100000
+
 # Configuración de django-crontab para actualización automática de cache
 # Se ejecuta cada hora entre las 7:00 y 15:00 hs
 CRONJOBS = [

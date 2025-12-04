@@ -719,8 +719,67 @@ def watermark(input_file):
     os.rename('temp.pdf', input_file)
 
 
+def obtener_dict_deuda():
+    """
+    Carga el archivo Excel de deuda masivo y retorna diccionario {unidad_alt: deuda}.
+
+    Returns:
+        tuple: (dict_deuda, tiene_exito)
+            - dict_deuda: diccionario con {unidad_alt: monto_deuda}
+            - tiene_exito: bool indicando si la carga fue exitosa
+    """
+    dict_deuda = {}
+    try:
+        archivo_deuda = settings.MEDIA_ROOT + r'/proveedores/deuda_masivo.xls'
+
+        if not os.path.exists(archivo_deuda):
+            return dict_deuda, False
+
+        df_deuda = pd.read_excel(
+            archivo_deuda,
+            skiprows=[0, 1, 2, 3, 4, 5, 6, 7, 9],
+            usecols='E,J'
+        )
+
+        for _, row in df_deuda.iterrows():
+            try:
+                unidad_alt = int(row['Unidad Alt.'])
+                if pd.notna(row['Total']):
+                    dict_deuda[unidad_alt] = row['Total']
+            except (ValueError, KeyError, TypeError):
+                continue
+
+        return dict_deuda, True
+
+    except Exception:
+        return dict_deuda, False
+
+
+def verificar_deuda_supera_umbral(partida, dict_deuda, umbral):
+    """
+    Verifica si la deuda de una partida supera el umbral configurado.
+
+    Args:
+        partida: número de partida
+        dict_deuda: diccionario {unidad_alt: deuda}
+        umbral: monto umbral de deuda
+
+    Returns:
+        bool: True si supera el umbral
+    """
+    if not partida or not dict_deuda:
+        return False
+
+    try:
+        partida_int = int(partida)
+        deuda = dict_deuda.get(partida_int, 0)
+        return deuda >= umbral
+    except (ValueError, TypeError):
+        return False
+
+
 @login_required
-def imprimir_cuadrilla(request, filtro, tipo):  # noqa
+def imprimir_cuadrilla(request, filtro, tipo, incluir_comentario_deuda=False):  # noqa
     """Crea PDFs para cuadrillas (general)."""
     # Creo el DF con la consulta y LISTA FOTMATEADA para sig. paso (TABLA):
     df_cuadrilla = pd.DataFrame.from_records(
@@ -737,6 +796,14 @@ def imprimir_cuadrilla(request, filtro, tipo):  # noqa
             for index2, item in enumerate(element):
                 if index2 == 0:
                     element[index2] = str(item)[8:10] + "/" + str(item)[5:7] + "/" + str(item)[0:4]
+
+    # Cargar diccionario de deuda si se requiere incluir comentario
+    dict_deuda = {}
+    if incluir_comentario_deuda:
+        dict_deuda, carga_exitosa = obtener_dict_deuda()
+        if not carga_exitosa:
+            incluir_comentario_deuda = False
+
     lista = copy.deepcopy(list_pre)
     # Agrego estilos a elementos de la lista:
     style1 = ParagraphStyle(name='normal', fontName='Helvetica', fontSize=11, alignment=TA_CENTER)
@@ -831,6 +898,15 @@ def imprimir_cuadrilla(request, filtro, tipo):  # noqa
         # motivo:
         can.drawString(260, 434, str(item[5][:44]) + '-')
         can.drawString(51, 420, '-' + str(item[5][44:]))
+
+        # Agregar comentario de deuda si corresponde
+        if incluir_comentario_deuda:
+            partida = item[6]  # índice 6 es partida en list_pre
+            if verificar_deuda_supera_umbral(partida, dict_deuda, settings.UMBRAL_DEUDA_CUADRILLA):
+                can.setFont('Helvetica-Bold', 10)
+                can.drawString(51, 90, '# Se entrega Estado de Cuenta.')
+                can.setFont('Helvetica', 10)
+
         '''
         # USO DE BARBIJO:
         can.setFont('Helvetica-Bold', 16)
@@ -858,13 +934,13 @@ def imprimir_cuadrilla(request, filtro, tipo):  # noqa
 @login_required
 def imprimir_cuadrilla_agua(request):
     """Genera PDFs cuadrilla agua."""
-    return imprimir_cuadrilla(request, 'Agua', 'agua')
+    return imprimir_cuadrilla(request, 'Agua', 'agua', incluir_comentario_deuda=True)
 
 
 @login_required
 def imprimir_cuadrilla_cloacas(request):
     """Genera PDFs cuadrilla cloacas."""
-    return imprimir_cuadrilla(request, 'Cloacas', 'cloacas')
+    return imprimir_cuadrilla(request, 'Cloacas', 'cloacas', incluir_comentario_deuda=True)
 
 
 @login_required
