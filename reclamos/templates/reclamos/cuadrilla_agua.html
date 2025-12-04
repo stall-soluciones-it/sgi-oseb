@@ -59,26 +59,6 @@
                     </div>
                 </th>
                 <th>
-                    <div class="th_fecha_resol">
-                        Fecha Resoluc.
-                    </div>
-                </th>
-                <th>
-                    <div class="th_tarea">
-                        Tarea Realizada
-                    </div>
-                </th>
-                <th>
-                    <div class="th_operario">
-                        Operario/s
-                    </div>
-                </th>
-                <th>
-                    <div class="th_notificacion">
-                        Notificación
-                    </div>
-                </th>
-                <th>
                     <div class="th_comentario">
                         Comentario
                     </div>
@@ -134,28 +114,6 @@
                 <td>
                     <div class="td_partida">
                         <a href="{% url 'detalle_partida' partida=reclamo.partida %}">{{ reclamo.partida|default_if_none:"-" }}</a>
-                    </div>
-                </td>
-                <td>
-                    <div class="td_fecha_resol">
-                        {{ reclamo.fecha_resolucion|default_if_none:"-"|date:'d-m-y' }}
-                    </div>
-                </td>
-                <td>
-                    <div class="td_tarea">
-                        {{ reclamo.tarea_realizada|default_if_none:"-"  }}
-                    </div>
-                </td>
-                <td>
-                    <div class="td_operario">
-                        {% for operario in reclamo.operario_s.all %}
-                            {{ operario }},
-                        {% endfor %}
-                    </div>
-                </td>
-                <td>
-                    <div class="td_notificacion">
-                        {{ reclamo.notificacion|default_if_none:"-"  }}
                     </div>
                 </td>
                 <td>
