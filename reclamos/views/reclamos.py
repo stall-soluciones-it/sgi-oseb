@@ -377,20 +377,11 @@ def detalle_reclamo(request, pk):
 @login_required
 def buscador_partidas(request):  # noqa
     """Buscador de partidas."""
-    # MYQSL, consulto listado completo de partidas:
-    connection = pymysql.connect(host=cnf.DB_OSEBAL_HOST,
-                                 user=cnf.DB_SISA_USR,
-                                 password=cnf.DB_SISA_PASS,
-                                 db='osebal_produccion',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)  # noqa
-    cursor = pymysql.cursors.DictCursor(connection)  # noqa
-    query = ("SELECT unidad, unidad_alt, razon, calle, numero, piso, depto " +
-             "FROM osebal_produccion.z80unidad;")
-    cursor.execute(query)
-    df_partida = pd.DataFrame(cursor.fetchall())
-    cursor.close()
-    connection.close()
+    # Consulto listado completo de partidas desde cache local:
+    unidades_data = list(CacheUnidadSISA.objects.all().values(
+        'unidad', 'unidad_alt', 'razon', 'calle', 'numero', 'piso', 'depto'
+    ))
+    df_partida = pd.DataFrame(unidades_data)
     # Creo listado de partidas con trabajos pendientes:
     partidas_usadas = list(Reclamo.objects.filter(  # noqa
         eliminado='Activo').values('partida'))
@@ -425,93 +416,30 @@ def info_partida(request):
 @login_required
 def detalle_partida(request, partida):
     """Consulta en SISA detalle de PARTIDA."""
-    # MYQSL:
-    connection = pymysql.connect(host=cnf.DB_OSEBAL_HOST,
-                                 user=cnf.DB_SISA_USR,
-                                 password=cnf.DB_SISA_PASS,
-                                 db='osebal_produccion',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)  # noqa
-    cursor = pymysql.cursors.DictCursor(connection)  # noqa
-    query = ("SELECT unidad, unidad_alt, razon, calle, numero, piso, depto, dat_complem, num_doc, " +
-             "telefono, telefono_cel, fax, tel_laboral, e_mail, e_mail_alternativo, usu_of_vir " +
-             "FROM osebal_produccion.z80unidad WHERE unidad_alt = '" + str(partida) + "';")
-    cursor.execute(query)
-    df_partida = pd.DataFrame(cursor.fetchall())
+    # Consulto datos de unidad desde cache local:
+    try:
+        unidad_obj = CacheUnidadSISA.objects.filter(unidad_alt=str(partida)).first()
+    except Exception:
+        unidad_obj = None
 
-    if df_partida.empty is False:
-        if str(df_partida.iloc[0]['unidad']) == 'None' or str(df_partida.iloc[0]['unidad']) == '':
-            unidad = '-'
-        else:
-            unidad = str(df_partida.iloc[0]['unidad'])
-        if str(df_partida.iloc[0]['unidad_alt']) == 'None' or \
-                str(df_partida.iloc[0]['unidad_alt']) == '':
-            partida = '-'
-        else:
-            partida = str(df_partida.iloc[0]['unidad_alt'])
-        if str(df_partida.iloc[0]['razon']) == 'None' or str(df_partida.iloc[0]['razon']) == '':
-            razon = '-'
-        else:
-            razon = str(df_partida.iloc[0]['razon'])
-        if str(df_partida.iloc[0]['calle']) == 'None' or str(df_partida.iloc[0]['calle']) == '':
-            calle = '-'
-        else:
-            calle = str(df_partida.iloc[0]['calle'])
-        if str(df_partida.iloc[0]['numero']) == 'None' or str(df_partida.iloc[0]['numero']) == '':
-            numero = '-'
-        else:
-            numero = str(df_partida.iloc[0]['numero'])
-        if str(df_partida.iloc[0]['piso']) == 'None' or str(df_partida.iloc[0]['piso']) == '':
-            piso = '-'
-        else:
-            piso = str(df_partida.iloc[0]['piso'])
-        if str(df_partida.iloc[0]['depto']) == 'None' or str(df_partida.iloc[0]['depto']) == '':
-            depto = '-'
-        else:
-            depto = str(df_partida.iloc[0]['depto'])
-        if str(df_partida.iloc[0]['dat_complem']) == 'None' or \
-                str(df_partida.iloc[0]['dat_complem']) == '':
-            dat_complem = '-'
-        else:
-            dat_complem = str(df_partida.iloc[0]['dat_complem'])
-        if str(df_partida.iloc[0]['num_doc']) == 'None' or \
-                str(df_partida.iloc[0]['num_doc']) == '':
-            num_doc = '-'
-        else:
-            num_doc = str(df_partida.iloc[0]['num_doc'])
-        if str(df_partida.iloc[0]['telefono']) == 'None' or \
-                str(df_partida.iloc[0]['telefono']) == '':
-            telefono = '-'
-        else:
-            telefono = str(df_partida.iloc[0]['telefono'])
-        if str(df_partida.iloc[0]['telefono_cel']) == 'None' or \
-                str(df_partida.iloc[0]['telefono_cel']) == '':
-            celular = '-'
-        else:
-            celular = str(df_partida.iloc[0]['telefono_cel'])
-        if str(df_partida.iloc[0]['fax']) == 'None' or str(df_partida.iloc[0]['fax']) == '':
-            tel_alt = '-'
-        else:
-            tel_alt = str(df_partida.iloc[0]['fax'])
-        if str(df_partida.iloc[0]['tel_laboral']) == 'None' or \
-                str(df_partida.iloc[0]['tel_laboral']) == '':
-            tel_lab = '-'
-        else:
-            tel_lab = str(df_partida.iloc[0]['tel_laboral'])
-        if str(df_partida.iloc[0]['e_mail']) == 'None' or str(df_partida.iloc[0]['e_mail']) == '':
-            e_mail = '-'
-        else:
-            e_mail = str(df_partida.iloc[0]['e_mail'])
-        if str(df_partida.iloc[0]['e_mail_alternativo']) == 'None' or \
-                str(df_partida.iloc[0]['e_mail_alternativo']) == '':
-            e_mail_alt = '-'
-        else:
-            e_mail_alt = str(df_partida.iloc[0]['e_mail_alternativo'])
-        if str(df_partida.iloc[0]['usu_of_vir']) == 'None' or \
-                str(df_partida.iloc[0]['usu_of_vir']) == '':
-            e_mail_alt2 = '-'
-        else:
-            e_mail_alt2 = str(df_partida.iloc[0]['usu_of_vir'])
+    if unidad_obj is not None:
+        # Procesar campos del objeto unidad
+        unidad = str(unidad_obj.unidad) if unidad_obj.unidad else '-'
+        partida = str(unidad_obj.unidad_alt) if unidad_obj.unidad_alt else '-'
+        razon = str(unidad_obj.razon) if unidad_obj.razon else '-'
+        calle = str(unidad_obj.calle) if unidad_obj.calle else '-'
+        numero = str(int(unidad_obj.numero)) if unidad_obj.numero else '-'
+        piso = str(unidad_obj.piso) if unidad_obj.piso else '-'
+        depto = str(unidad_obj.depto) if unidad_obj.depto else '-'
+        dat_complem = str(unidad_obj.dat_complem) if unidad_obj.dat_complem else '-'
+        num_doc = str(int(unidad_obj.num_doc)) if unidad_obj.num_doc else '-'
+        telefono = str(unidad_obj.telefono) if unidad_obj.telefono else '-'
+        celular = str(unidad_obj.telefono_cel) if unidad_obj.telefono_cel else '-'
+        tel_alt = str(unidad_obj.fax) if unidad_obj.fax else '-'
+        tel_lab = str(unidad_obj.tel_laboral) if unidad_obj.tel_laboral else '-'
+        e_mail = str(unidad_obj.e_mail) if unidad_obj.e_mail else '-'
+        e_mail_alt = str(unidad_obj.e_mail_alternativo) if unidad_obj.e_mail_alternativo else '-'
+        e_mail_alt2 = str(unidad_obj.usu_of_vir) if unidad_obj.usu_of_vir else '-'
     else:
         unidad = '-'
         partida = 'PARTIDA INEXISTENTE'
@@ -529,13 +457,28 @@ def detalle_partida(request, partida):
         e_mail = '-'
         e_mail_alt = '-'
         e_mail_alt2 = '-'
-    query2 = ("SELECT fecha_obs, leyenda " +
-              "FROM osebal_produccion.z80unidad_obs WHERE unidad = '" + str(unidad) + "';")
-    cursor.execute(query2)
-    observ = pd.DataFrame(cursor.fetchall())
-    cursor.close()
-    connection.close()
+
+    # Consultar observaciones desde z80unidad_obs (no está cacheada)
     lst_obs = []
+    if unidad != '-':
+        try:
+            connection = pymysql.connect(host=cnf.DB_OSEBAL_HOST,
+                                         user=cnf.DB_SISA_USR,
+                                         password=cnf.DB_SISA_PASS,
+                                         db='osebal_produccion',
+                                         charset='utf8mb4',
+                                         cursorclass=pymysql.cursors.DictCursor)
+            cursor = pymysql.cursors.DictCursor(connection)
+            query_obs = ("SELECT fecha_obs, leyenda " +
+                        "FROM osebal_produccion.z80unidad_obs WHERE unidad = '" + str(unidad) + "';")
+            cursor.execute(query_obs)
+            observ = pd.DataFrame(cursor.fetchall())
+            cursor.close()
+            connection.close()
+        except Exception:
+            observ = pd.DataFrame()
+    else:
+        observ = pd.DataFrame()
     for item in observ.to_records():
         lst_obs.append(str(item[1].strftime("%d/%m/%Y")) + ' - ' + str(item[2]))
     if partida != 'PARTIDA INEXISTENTE':
