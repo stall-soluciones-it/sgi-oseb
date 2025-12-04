@@ -16,7 +16,7 @@ class ReclamoForm(forms.ModelForm):
 
         model = Reclamo
         fields = ('fecha', 'tipo_de_reclamo', 'apellido', 'calle', 'altura', 'telefono',
-                  'detalle', 'estado', 'a_reporte', 'partida', 'fecha_resolucion',
+                  'detalle', 'estado', 'partida', 'fecha_resolucion',
                   'operario_s', 'tarea_realizada', 'notificacion', 'comentario')
         widgets = {'fecha': forms.SelectDateWidget(years=YEARS),
                    'fecha_resolucion': forms.SelectDateWidget(years=YEARS)}

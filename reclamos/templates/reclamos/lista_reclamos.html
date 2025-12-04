@@ -101,11 +101,6 @@
                     Comentario
                 </div>
             </th>
-            <th>
-                <div class="th_a_reporte">
-                    Imp.
-                </div>
-            </th>
         </tr>
         {% for reclamo in items %}
         <tr>
@@ -179,11 +174,6 @@
             <td>
                 <div class="td_comentario">
                     {{ reclamo.comentario|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_a_reporte">
-                    {{ reclamo.a_reporte }}
                 </div>
             </td>
         </tr>

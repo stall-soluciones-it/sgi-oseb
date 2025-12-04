@@ -535,8 +535,7 @@ def detalle_partida(request, partida):
 def cuadrilla_agua(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     agua = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                   a_reporte='Si', eliminado='Activo',
-                                   tipo_de_reclamo__tipo__in=['Agua'])
+                                   eliminado='Activo', tipo_de_reclamo__tipo__in=['Agua'])
             .order_by('fecha'))
 
     cuadrillas = DatosCuadrilla.objects.all()  # noqa
@@ -559,8 +558,7 @@ def cuadrilla_agua(request):
 def cuadrilla_cloacas(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     cloacas = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                      a_reporte='Si', eliminado='Activo',
-                                      tipo_de_reclamo__tipo='Cloacas').order_by('fecha'))
+                                      eliminado='Activo', tipo_de_reclamo__tipo='Cloacas').order_by('fecha'))
 
     cuadrillas = DatosCuadrilla.objects.all()  # noqa
     datos = get_object_or_404(DatosCuadrilla, datos='unico')
@@ -582,7 +580,7 @@ def cuadrilla_cloacas(request):
 def cuadrilla_niv_pozos(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     pozos = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                    a_reporte='Si', eliminado='Activo',
+                                    eliminado='Activo',
                                     tipo_de_reclamo__tipo='Nivelación / Pozos').order_by('fecha'))
 
     cuadrillas = DatosCuadrilla.objects.all()  # noqa
@@ -605,7 +603,7 @@ def cuadrilla_niv_pozos(request):
 def cuadrilla_mco_tapa(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     marco_tapa = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                         a_reporte='Si', eliminado='Activo',
+                                         eliminado='Activo',
                                          tipo_de_reclamo__tipo__in=['Marco y tapa']))
 
     cuadrillas = DatosCuadrilla.objects.all()  # noqa
@@ -628,7 +626,7 @@ def cuadrilla_mco_tapa(request):
 def cuadrilla_mant_cloacal(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     mant_red_cloacal = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                               a_reporte='Si', eliminado='Activo',
+                                               eliminado='Activo',
                                                tipo_de_reclamo__tipo__in=['Mant. Red Cloacal']))
 
     cuadrillas = DatosCuadrilla.objects.all()  # noqa
@@ -651,7 +649,7 @@ def cuadrilla_mant_cloacal(request):
 def cuadrilla_rec_serv_med(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     serv_med = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                       a_reporte='Si', eliminado='Activo',
+                                       eliminado='Activo',
                                        tipo_de_reclamo__tipo__in=['Reclamo servicio medido'])
                 .order_by('fecha'))
 
@@ -675,7 +673,7 @@ def cuadrilla_rec_serv_med(request):
 def cuadrilla_verif_fact(request):
     """Muestra listado de trabajos para las cuadrillas y botones para imprimir las planillas."""
     verif_fc = (Reclamo.objects.filter(estado__estado__in=['Pendiente', 'Deuda Vigente'],  # noqa
-                                       a_reporte='Si', eliminado='Activo',
+                                       eliminado='Activo',
                                        tipo_de_reclamo__tipo='Verificación por facturación').order_by('fecha'))
 
     cuadrillas = DatosCuadrilla.objects.all()  # noqa

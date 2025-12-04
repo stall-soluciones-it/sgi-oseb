@@ -91,8 +91,8 @@ table.editar_reclamo {
 }
 
 table.editar_reclamo th {
-    color: #FFFFFF
-    background-color: ##30A8DF;
+    color: #FFFFFF;
+    background-color: #30A8DF;
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 170px;
@@ -489,4 +489,21 @@ table#partidas th:nth-child(8) {
     cursor: pointer;
     padding: 0;
     text-decoration: underline;
+}
+
+.toggle-reporte {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.toggle-reporte:hover {
+    opacity: 0.8;
+}
+
+.toggle-reporte.activo {
+    color: green;
+}
+
+.toggle-reporte.inactivo {
+    color: red;
 }

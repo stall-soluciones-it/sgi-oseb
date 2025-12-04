@@ -165,7 +165,12 @@
                 </td>
                 <td>
                     <div class="td_a_reporte">
-                        {{ reclamo.a_reporte }}
+                        <span class="toggle-reporte {% if reclamo.a_reporte == 'Si' %}activo{% else %}inactivo{% endif %}"
+                              data-reclamo-id="{{ reclamo.n_de_reclamo }}"
+                              data-estado="{{ reclamo.a_reporte }}"
+                              title="Click para {% if reclamo.a_reporte == 'Si' %}NO imprimir{% else %}imprimir{% endif %}">
+                            {% if reclamo.a_reporte == 'Si' %}✓{% else %}✗{% endif %}
+                        </span>
                     </div>
                 </td>
             </tr>
@@ -187,4 +192,62 @@
         {% endif %}
         <br><br><br><br>
     </div>
+{% endblock %}
+
+{% block additional_scripts %}
+<script>
+$(document).ready(function() {
+    // Handler para toggle de a_reporte
+    $('.toggle-reporte').on('click', function() {
+        const $btn = $(this);
+
+        // Prevenir clicks durante carga
+        if ($btn.hasClass('loading')) {
+            return;
+        }
+
+        const reclamoId = $btn.data('reclamo-id');
+        const estadoActual = $btn.data('estado');
+
+        // UI feedback: loading state
+        $btn.addClass('loading');
+
+        // AJAX request
+        $.ajax({
+            url: '{% url "toggle_a_reporte" %}',
+            method: 'POST',
+            data: {
+                reclamo_id: reclamoId,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    const nuevoEstado = response.nuevo_estado;
+
+                    // Actualizar UI
+                    $btn.data('estado', nuevoEstado);
+
+                    if (nuevoEstado === 'Si') {
+                        $btn.removeClass('inactivo').addClass('activo');
+                        $btn.text('✓');
+                        $btn.attr('title', 'Click para NO imprimir');
+                    } else {
+                        $btn.removeClass('activo').addClass('inactivo');
+                        $btn.text('✗');
+                        $btn.attr('title', 'Click para imprimir');
+                    }
+                } else {
+                    alert('Error al actualizar: ' + (response.error || 'Error desconocido'));
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error de conexión: ' + error);
+            },
+            complete: function() {
+                $btn.removeClass('loading');
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
