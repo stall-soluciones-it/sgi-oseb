@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Umbral de deuda para comprobantes
-UMBRAL_DEUDA_COMPROBANTE = 1000
+UMBRAL_DEUDA_COMPROBANTE = 50000
 
 # Configuración de django-crontab para actualización automática de cache
 CRONJOBS = [

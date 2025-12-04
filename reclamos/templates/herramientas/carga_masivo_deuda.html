@@ -11,15 +11,37 @@
                 <p>Aguarde que termine el proceso, a continuación se descargará un log</p>
                 <p>informando el resultado.</p>
                 <br>
-                {% if vencido == 'si' %}
-                <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:red">{{ masivo }}</span></p>
+                {% if masivo %}
+                    {% if vencido == 'si' %}
+                    <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:red">{{ masivo }}</span></p>
+                    {% else %}
+                    <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:blue">{{ masivo }}</span></p>
+                    {% endif %}
                 {% else %}
-                <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:blue">{{ masivo }}</span></p>
+                    <p><b>&Uacute;ltima carga Masivo de Deuda:</b> <span style="color:gray">No hay cargas previas</span></p>
                 {% endif %}
+                <br>
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <label for="archivo">Ingrese archivo Deuda Masivo SISA: </label>
-                    <p><input type="file" name="archivo"/></p>
+                    <div class="form-group">
+                        <label for="{{ form.archivo.id_for_label }}">{{ form.archivo.label }}:</label>
+                        {{ form.archivo }}
+                        {% if form.archivo.errors %}
+                            <div style="color:red">{{ form.archivo.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="{{ form.fecha_masivo.id_for_label }}">{{ form.fecha_masivo.label }}:</label>
+                        {{ form.fecha_masivo }}
+                        {% if form.fecha_masivo.help_text %}
+                            <small style="color:gray">{{ form.fecha_masivo.help_text }}</small>
+                        {% endif %}
+                        {% if form.fecha_masivo.errors %}
+                            <div style="color:red">{{ form.fecha_masivo.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <br>
                     <p><input type="submit" value="Cargar archivo"/></p>
                 </form>
             </div>

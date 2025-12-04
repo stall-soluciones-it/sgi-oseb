@@ -11,7 +11,7 @@ import pymysql
 import pandas as pd
 import fitz
 from smb.SMBConnection import SMBConnection
-from reclamos.forms import CorreoForm
+from reclamos.forms import CorreoForm, CargaMasivoDeudaForm
 from reclamos.models import Reclamos_correo
 from reclamos.admintools.procesa_rbc import procesa_rbc
 from reclamos.admintools.rend_alberghini import process_alberghini
@@ -307,24 +307,39 @@ def deuda_proveedores(request):
 def carga_masivo_deuda(request):
     """Renderiza página carga masivo deuda."""
     ahora = datetime.datetime.now()
-    fecha_masivo = datetime.datetime.fromtimestamp(os.path.getmtime(settings.MEDIA_ROOT +
-                                                                    r'/proveedores/' +
-                                                                    'deuda_masivo.xls'))
-    if (ahora - fecha_masivo) > datetime.timedelta(days=30):
-        vencido = 'si'
-    else:
+
+    # Obtener fecha del último archivo cargado (si existe)
+    try:
+        fecha_masivo = datetime.datetime.fromtimestamp(os.path.getmtime(settings.MEDIA_ROOT +
+                                                                        r'/proveedores/' +
+                                                                        'deuda_masivo.xls'))
+        if (ahora - fecha_masivo) > datetime.timedelta(days=30):
+            vencido = 'si'
+        else:
+            vencido = 'no'
+    except FileNotFoundError:
+        fecha_masivo = None
         vencido = 'no'
-    if request.method == "POST" and request.FILES.get('filepath', False) is False:
-        if "archivo" not in request.FILES:
-            return render(request, 'herramientas/carga_masivo_deuda.html')
-        archivo = request.FILES["archivo"]
-        path = default_storage.save(r'tmp/' + archivo.name, ContentFile(archivo.read()))
-        tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-        archivo = process_carga_masivo_deuda(tmp_file)
-        return FileResponse(open(archivo, 'rb'),
-                            content_type='application/txt', as_attachment=True)
+
+    if request.method == "POST":
+        form = CargaMasivoDeudaForm(request.POST, request.FILES)
+        if form.is_valid():
+            archivo = form.cleaned_data['archivo']
+            fecha_ingresada = form.cleaned_data['fecha_masivo']
+
+            # Guardar archivo temporalmente
+            path = default_storage.save(r'tmp/' + archivo.name, ContentFile(archivo.read()))
+            tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+
+            # Procesar archivo con la fecha ingresada
+            archivo_log = process_carga_masivo_deuda(tmp_file, fecha_ingresada)
+            return FileResponse(open(archivo_log, 'rb'),
+                                content_type='application/txt', as_attachment=True)
+    else:
+        form = CargaMasivoDeudaForm()
+
     return render(request, 'herramientas/carga_masivo_deuda.html',
-                  {'masivo': fecha_masivo, 'vencido': vencido})
+                  {'form': form, 'masivo': fecha_masivo, 'vencido': vencido})
 
 
 @login_required

@@ -190,3 +190,18 @@ class CorreoForm(forms.ModelForm):
 
         model = Reclamos_correo
         fields = ('cuenta', 'observaciones')
+
+
+class CargaMasivoDeudaForm(forms.Form):
+    """Form de carga masivo de deuda."""
+
+    archivo = forms.FileField(
+        label='Ingrese archivo Deuda Masivo SISA',
+        required=True
+    )
+    fecha_masivo = forms.DateField(
+        label='Fecha del Masivo de Deuda',
+        required=True,
+        widget=forms.SelectDateWidget(years=YEARS),
+        help_text='Ingrese la fecha correspondiente al archivo de masivo de deuda'
+    )
