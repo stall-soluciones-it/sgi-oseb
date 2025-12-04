@@ -491,19 +491,39 @@ table#partidas th:nth-child(8) {
     text-decoration: underline;
 }
 
+/* Toggle para a_reporte en cuadrillas */
 .toggle-reporte {
     cursor: pointer;
-    transition: opacity 0.2s ease;
-}
-
-.toggle-reporte:hover {
-    opacity: 0.8;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: inline-block;
+    transition: all 0.2s ease;
+    user-select: none;
 }
 
 .toggle-reporte.activo {
-    color: green;
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.toggle-reporte.activo:hover {
+    background-color: #c3e6cb;
 }
 
 .toggle-reporte.inactivo {
-    color: red;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.toggle-reporte.inactivo:hover {
+    background-color: #f5c6cb;
+}
+
+.toggle-reporte.loading {
+    opacity: 0.6;
+    cursor: wait;
 }
