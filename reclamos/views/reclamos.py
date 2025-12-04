@@ -308,8 +308,7 @@ def nuevo_reclamo(request):
             return redirect('detalle_reclamo', pk=reclamo.n_de_reclamo)
     else:
         rec_form = ReclamoForm()
-    return render(request, 'reclamos/nuevo_reclamo.html', {'rec_form': rec_form,
-                                                           'tabla_un': buscador_partidas(request)})
+    return render(request, 'reclamos/nuevo_reclamo.html', {'rec_form': rec_form})
 
 
 @login_required

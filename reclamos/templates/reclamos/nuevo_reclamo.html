@@ -1,17 +1,18 @@
 {% extends 'reclamos/base.html' %}
+{% load static %}
 
 {% block content %}
     <title>Nuevo reclamo</title>
+
     {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
-        {% load static %}
-        <script src="{% static 'tablefilter/tablefilter.js' %}"></script>
-        <script language="JavaScript" type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
         <h2>Nuevo Trabajo:</h2>
+
         <table>
             <tr>
-                <td class="editar_reclamo">
+                <td class="editar_reclamo" style="vertical-align:top; width:50%;">
                     <p><b>Cargar reclamo:</b></p>
-                    <form method="POST" enctype="multipart/form-data" class="post-form">{% csrf_token %}
+                    <form method="POST" enctype="multipart/form-data" class="post-form">
+                        {% csrf_token %}
                         <table class="nuevo_reclamo">
                             {{ rec_form.as_table }}
                         </table>
@@ -19,86 +20,93 @@
                         <button type="submit" class="btn btn-default"><b>Guardar</b></button>
                     </form>
                 </td>
-                <td class="editar_reclamo">
-                    <p><b>Buscar partida </b><span style="font-size:11; color:red">(*unidades en rojo tienen trabajos realizados o pendientes) </span><b>:</b></p>
-                    {{ tabla_un|safe }}
-                    <script data-config="">
-                        var filtersConfig = {
-                        base_path: '{% static 'tablefilter/' %}',
-                        filters_row_index: 1,
-                        col_types: [
-                        'number',
-                        'number',
-                        'string',
-                        'string',
-                        'number',
-                        'string',
-                        'string',
-                        ],
-                        extensions: [{ name: 'sort' }],
-                        };
-                        var tf = new TableFilter('partidas', filtersConfig);
-                        tf.init();
-                    </script>
-                    <script>
-                        $('.unidad').click(function () {
-                            var formFields = [];
-                            var $target = $(event.target);
-                            var $row = $target.closest('tr');
-                            $row.find('td').each(function (index, el) {
-                                var fieldValue = $(el).html();
-                                switch (index) {
-                                    case 3:
-                                        formFields['calle'] = fieldValue;
-                                        break;
-                                    case 7:
-                                        formFields['partida'] = fieldValue;
-                                        break;
-                                    case 2:
-                                        formFields['apellido'] = fieldValue;
-                                        break;
-                                    case 4:
-                                        formFields['altura'] = fieldValue;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            });
-                            fillForm(formFields);
-                        });
-                    </script>
-                    <script>
-                        function fillForm(data) {
-                            var $form = $('.nuevo_reclamo');
-                            $form.find('input').each(function () {
-                                var $input = $(this);
-                                switch ($input.attr("name")) {
-                                    case 'calle':
-                                       $input.val(capitalize(data['calle']));
-                                       break;
-                                    case 'partida':
-                                       $input.val(data['partida']);
-                                       break;
-                                    case 'apellido':
-                                       $input.val(capitalize(data['apellido']));
-                                       break;
-                                    case 'altura':
-                                       $input.val(data['altura']);
-                                       break;
-                                    default:
-                                        break;
-                                }
-                            });
-                        }
-                    </script>
-                    <script>
-                        function capitalize(s){
-                            return s.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
-                        };
-                    </script>
+
+                <td class="editar_reclamo" style="vertical-align:top; width:50%;">
+                    <p><b>Buscador</b>
+                        <span style="font-size:11px; color:red">
+                            (*cuentas en rojo tienen trabajos realizados o pendientes)
+                        </span>
+                    </p>
+
+                    <!-- Campo de búsqueda -->
+                    <div class="form-group">
+                        <input type="text"
+                               id="buscar-partida"
+                               class="form-control"
+                               placeholder="Buscar por dirección o nombre... (mínimo 3 caracteres)"
+                               autocomplete="off"
+                               style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+
+                    <!-- Mensajes -->
+                    <div id="mensaje-busqueda"></div>
+
+                    <!-- Contenedor de resultados -->
+                    <div id="resultados-partidas" style="max-height: 500px; overflow-y: auto; margin-top: 10px;"></div>
                 </td>
             </tr>
         </table>
+
+        <!-- Estilos específicos de esta página -->
+        <style>
+            .loading-spinner {
+                padding: 20px;
+                font-size: 16px;
+                color: #337ab7;
+            }
+
+            .glyphicon-spin {
+                animation: spin 1s infinite linear;
+            }
+
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+
+            .campo-actualizado {
+                background-color: #d4edda !important;
+                transition: background-color 0.5s ease;
+            }
+
+            .unidad-con-trabajo {
+                color: red !important;
+                font-weight: bold;
+            }
+
+            #tabla-partidas {
+                font-size: 13px;
+                width: 100%;
+            }
+
+            #tabla-partidas tbody tr:hover {
+                background-color: #f5f5f5;
+            }
+
+            #tabla-partidas thead {
+                background-color: #337ab7;
+                color: white;
+            }
+
+            #tabla-partidas thead th {
+                padding: 8px;
+                text-align: left;
+            }
+
+            #tabla-partidas tbody td {
+                padding: 6px 8px;
+            }
+
+            #tabla-partidas tbody tr.info {
+                background-color: #d9edf7 !important;
+            }
+        </style>
     {% endif %}
+
     <br><br><br><br>
+{% endblock %}
+
+{% block additional_scripts %}
+    <!-- Módulo de búsqueda AJAX de partidas -->
+    <script src="{% static 'js/buscador_partidas.js' %}"></script>
 {% endblock %}
