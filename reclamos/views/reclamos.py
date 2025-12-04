@@ -776,8 +776,8 @@ def imprimir_cuadrilla(request, filtro, tipo):  # noqa
     doc = SimpleDocTemplate(settings.PDF_ROOT + 'resumen_' + tipo + '.pdf', pagesize=A4,
                             rightMargin=0, leftMargin=3, topMargin=1, bottomMargin=0)
     # Encabezado:
-    logo = Image(settings.PDF_ROOT + 'logo.jpg')
-    logo.drawHeight = 19.86 * mm
+    logo = Image(settings.PDF_ROOT + 'logo_cuadrillas.png')
+    logo.drawHeight = 16.59 * mm
     logo.drawWidth = 38.85 * mm
     op_style = ParagraphStyle(name='normal', fontName='Helvetica-Bold', fontSize=13)
     head_list = None
@@ -831,11 +831,13 @@ def imprimir_cuadrilla(request, filtro, tipo):  # noqa
         # motivo:
         can.drawString(260, 434, str(item[5][:44]) + '-')
         can.drawString(51, 420, '-' + str(item[5][44:]))
+        '''
         # USO DE BARBIJO:
         can.setFont('Helvetica-Bold', 16)
         can.drawString(520, 140, '*Uso obligatorio de barbijo.')
         can.drawImage(settings.PDF_ROOT + 'firma_mario.jpg', 750, 122, width=45, height=52)
-
+        '''
+        
         can.showPage()
         can.save()
         watermark(settings.PDF_ROOT + 'temp_' + tipo + '_' + str(partes) + '.pdf')
@@ -1167,7 +1169,7 @@ def imprimir_comprobante_reclamo(request, pk):
     width, height = A4
 
     # Logo de la empresa
-    logo_path = settings.STATIC_ROOT + '/img/logo.png'
+    logo_path = settings.STATIC_ROOT + '/img/logo_cuadrillas.png'
     if os.path.exists(logo_path):
         c.drawImage(logo_path, 1, height - 100, width=180, height=90,
                    preserveAspectRatio=True, mask='auto')
