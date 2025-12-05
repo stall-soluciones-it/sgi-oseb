@@ -7,9 +7,9 @@
     {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
         <h2>Nuevo Trabajo:</h2>
 
-        <table>
+        <table width="100%">
             <tr>
-                <td class="editar_reclamo" style="vertical-align:top; width:50%;">
+                <td id="columna-formulario" class="editar_reclamo" style="vertical-align:top; width:45%;">
                     <p><b>Cargar reclamo:</b></p>
                     <form method="POST" enctype="multipart/form-data" class="post-form">
                         {% csrf_token %}
@@ -21,7 +21,7 @@
                     </form>
                 </td>
 
-                <td class="editar_reclamo" style="vertical-align:top; width:50%;">
+                <td id="columna-buscador" class="editar_reclamo" style="vertical-align:top; width:55%;">
                     <p><b>Buscador</b>
                         <span style="font-size:11px; color:red">
                             (*cuentas en rojo tienen trabajos realizados o pendientes)
@@ -33,7 +33,7 @@
                         <input type="text"
                                id="buscar-partida"
                                class="form-control"
-                               placeholder="Buscar por dirección o nombre... (mínimo 3 caracteres)"
+                               placeholder="Buscar por dirección, nombre, cuenta o partida... (mínimo 3 caracteres)"
                                autocomplete="off"
                                style="width: 100%; padding: 8px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;">
                     </div>
@@ -49,6 +49,25 @@
 
         <!-- Estilos específicos de esta página -->
         <style>
+            /* Hacer que el contenedor ocupe todo el ancho de la pantalla */
+            .content.container {
+                width: 80% !important;
+                max-width: 80% !important;
+            }
+
+            .content .col-md-8 {
+                width: 100% !important;
+            }
+
+            /* Sobrescribir anchos de columnas para esta página */
+            #columna-formulario {
+                width: 45% !important;
+            }
+
+            #columna-buscador {
+                width: 55% !important;
+            }
+
             .loading-spinner {
                 padding: 20px;
                 font-size: 16px;
