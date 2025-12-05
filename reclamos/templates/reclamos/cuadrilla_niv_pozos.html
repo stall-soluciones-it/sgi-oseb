@@ -2,6 +2,22 @@
 
 {% block content %}
     <title>Cuadrillas</title>
+
+    <!-- Estilos específicos para cuadrillas - anchos de columnas ampliados -->
+    <style>
+        .th_apellido, .td_apellido {
+            width: 100px !important;
+        }
+
+        .th_calle, .td_calle {
+            width: 110px !important;
+        }
+
+        .th_detalle, .td_detalle {
+            width: 200px !important;
+        }
+    </style>
+
     <div class="reclamo">
         <h2>{{ titulo_pozos }}</h2>
         {% if perms.reclamos.editar_reclamo %}
