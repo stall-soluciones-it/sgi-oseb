@@ -14,9 +14,11 @@ from PIL import Image as ImagePIL, ImageDraw  # noqa
 from PyPDF2 import PdfReader, PdfWriter, PdfMerger  # noqa
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
+from django.db.models import Q
+from django import forms
 import django_filters  # noqa
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Table, Image  # noqa
 from reportlab.lib import colors  # noqa
@@ -26,7 +28,7 @@ from reportlab.lib.units import mm  # noqa
 from reportlab.lib.enums import TA_CENTER  # noqa
 from reportlab.pdfgen import canvas  # noqa
 import sgi.shpd_cnf as cnf
-from reclamos.models import (Reclamo, Tipos, Archivos, DatosCuadrilla, FiltroInformePendFin,
+from reclamos.models import (Reclamo, Tipos, Estados, Archivos, DatosCuadrilla, FiltroInformePendFin,
                              FiltroInformeTiemResol, CacheUnidadSISA)
 from reclamos.forms import (ReclamoForm, ArchivoForm, CuadrillaAgua, CuadrillaCloaca, CuadrillaNivPozos,
                             CuadrillaMcoTapa, CuadrillaMantCloacal, CuadrillaVerifFact, CuadrillaServMed,
@@ -34,26 +36,62 @@ from reclamos.forms import (ReclamoForm, ArchivoForm, CuadrillaAgua, CuadrillaCl
 matplotlib.use('Agg')
 
 
-class YearFilter(django_filters.ChoiceFilter):
-    def __init__(self, *args, **kwargs):
-        super(YearFilter, self).__init__(*args, **kwargs)
-        years = [year for year in range(timezone.now().year, timezone.now().year - 10, -1)]  # Adjust range as needed
-        self.extra['choices'] = [(str(year), str(year)) for year in years]
-
-
 class ReclamoFilter(django_filters.FilterSet):
-    fecha = YearFilter(method='filter_by_year', label='Año')
+    """FilterSet para reclamos con filtros de estado, tipo, rango de fechas y búsqueda de texto."""
+
+    # Filtro de estado
+    estado = django_filters.ModelChoiceFilter(
+        queryset=Estados.objects.all(),
+        empty_label="Todos los estados",
+        label='Estado'
+    )
+
+    # Filtro de tipo (mantener existente, mejorado)
     tipo_de_reclamo = django_filters.ModelChoiceFilter(
-        queryset=Tipos.objects.all(),  # noqa
-        empty_label="----------"
+        queryset=Tipos.objects.all().order_by('tipo'),
+        empty_label="Todos los tipos",
+        label='Tipo'
+    )
+
+    # Rango de fechas - desde
+    fecha_desde = django_filters.DateFilter(
+        field_name='fecha',
+        lookup_expr='gte',
+        label='Desde',
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+
+    # Rango de fechas - hasta
+    fecha_hasta = django_filters.DateFilter(
+        field_name='fecha',
+        lookup_expr='lte',
+        label='Hasta',
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+
+    # Búsqueda general en múltiples campos
+    busqueda = django_filters.CharFilter(
+        method='filter_busqueda',
+        label='Búsqueda',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Buscar en apellido, calle o detalle'
+        })
     )
 
     class Meta:
         model = Reclamo
-        fields = ['fecha', 'tipo_de_reclamo']
+        fields = ['estado', 'tipo_de_reclamo', 'fecha_desde', 'fecha_hasta', 'busqueda']
 
-    def filter_by_year(self, queryset, name, value):  # noqa
-        return queryset.filter(fecha__year=value)
+    def filter_busqueda(self, queryset, name, value):
+        """Búsqueda en apellido, calle y detalle."""
+        if value:
+            return queryset.filter(
+                Q(apellido__icontains=value) |
+                Q(calle__icontains=value) |
+                Q(detalle__icontains=value)
+            )
+        return queryset
 
 
 # <TRABAJOS>
@@ -92,7 +130,8 @@ def lista_reclamos(request):
 
     return render(request, 'reclamos/lista_reclamos.html',
                   {'reclamos': reclamos, 'titulo': 'Trabajos:',
-                   'title': title, 'items': items, 'filter': reclamo_filter})
+                   'title': title, 'items': items, 'filter': reclamo_filter,
+                   'vista_tipo': 'completo'})
 
 
 @login_required
@@ -121,7 +160,8 @@ def lista_reclamos_borradores(request):
 
     return render(request, 'reclamos/lista_reclamos.html',
                   {'reclamos': reclamos, 'titulo': 'Borradores:',
-                   'title': title, 'items': items, 'filter': reclamo_filter})
+                   'title': title, 'items': items, 'filter': reclamo_filter,
+                   'vista_tipo': 'borradores'})
 
 
 @login_required
@@ -167,7 +207,8 @@ def lista_reclamos_pendientes(request):
 
     return render(request, 'reclamos/lista_reclamos.html',
                   {'reclamos': reclamos, 'titulo': 'Trabajos pendientes:',
-                   'title': title, 'items': items, 'filter': reclamo_filter})
+                   'title': title, 'items': items, 'filter': reclamo_filter,
+                   'vista_tipo': 'pendientes'})
 
 
 @login_required
@@ -210,7 +251,8 @@ def lista_reclamos_finalizados(request):
 
     return render(request, 'reclamos/lista_reclamos.html',
                   {'reclamos': reclamos, 'titulo': 'Trabajos finalizados:',
-                   'title': title, 'items': items, 'filter': reclamo_filter})
+                   'title': title, 'items': items, 'filter': reclamo_filter,
+                   'vista_tipo': 'finalizados'})
 
 
 @login_required
@@ -253,7 +295,8 @@ def lista_reclamos_seguimiento(request):
 
     return render(request, 'reclamos/lista_reclamos.html',
                   {'reclamos': reclamos, 'titulo': 'Trabajos p/ seguimiento:',
-                   'title': title, 'items': items, 'filter': reclamo_filter})
+                   'title': title, 'items': items, 'filter': reclamo_filter,
+                   'vista_tipo': 'seguimiento'})
 
 
 @login_required
@@ -286,9 +329,206 @@ def lista_reclamos_deuda(request):
     rec_deuda = sorted(chain(filtro_estado, filtro_tipo),
                        key=lambda instance: instance.n_de_reclamo)
 
+    # Crear un filter vacío para la vista deuda
+    reclamo_filter = ReclamoFilter(request.GET, queryset=Reclamo.objects.none())
+
+    paginator = Paginator(rec_deuda, 100)
+    page = request.GET.get('page')
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+
     return render(request, 'reclamos/lista_reclamos.html',
                   {'reclamos': rec_deuda, 'titulo': 'Deuda:',
-                   'title': title})
+                   'title': title, 'items': items, 'filter': reclamo_filter,
+                   'vista_tipo': 'deuda'})
+
+
+@login_required
+def lista_reclamos_ajax(request):
+    """Endpoint AJAX para filtrado dinámico de reclamos."""
+    # Obtener tipo de vista desde parámetro
+    vista_tipo = request.GET.get('vista_tipo', 'completo')
+    user = str(request.user)
+
+    # Determinar queryset base según tipo de vista
+    base_filters = {'borrador': 'No', 'eliminado': 'Activo'}
+
+    # Agregar filtros específicos según tipo de vista
+    if vista_tipo == 'borradores':
+        base_filters = {'borrador': 'Si', 'eliminado': 'Activo'}
+    elif vista_tipo == 'pendientes':
+        reclamos = Reclamo.objects.filter(
+            borrador='No',
+            estado__estado__in=['Pendiente', 'Deuda Vigente'],
+            eliminado='Activo'
+        )
+        if 'gsa-' in user:
+            reclamos = reclamos.filter(author__username__startswith='gsa-')
+        reclamos = reclamos.order_by('-n_de_reclamo')
+    elif vista_tipo == 'finalizados':
+        reclamos = Reclamo.objects.filter(
+            borrador='No',
+            estado__estado='Finalizado',
+            eliminado='Activo'
+        )
+        if 'gsa-' in user:
+            reclamos = reclamos.filter(author__username__startswith='gsa-')
+        reclamos = reclamos.order_by('-n_de_reclamo')
+    elif vista_tipo == 'seguimiento':
+        reclamos = Reclamo.objects.filter(
+            borrador='No',
+            estado__estado='Seguimiento / Finalizado',
+            eliminado='Activo'
+        )
+        if 'gsa-' in user:
+            reclamos = reclamos.filter(author__username__startswith='gsa-')
+        reclamos = reclamos.order_by('-n_de_reclamo')
+    elif vista_tipo == 'deuda':
+        # Vista deuda es especial, usa chain
+        filtro_estado = Reclamo.objects.filter(
+            estado__estado__in=['Finalizado / Deuda', 'Deuda Vigente'],
+            eliminado='Activo'
+        ).order_by('n_de_reclamo')
+        filtro_tipo = Reclamo.objects.filter(
+            eliminado='Activo',
+            tipo_de_reclamo__tipo='Consulta Deuda',
+            estado__estado='Pendiente'
+        ).order_by('n_de_reclamo')
+        reclamos = sorted(
+            chain(filtro_estado, filtro_tipo),
+            key=lambda instance: instance.n_de_reclamo,
+            reverse=True
+        )
+
+        # Para deuda, no usar ReclamoFilter
+        paginator = Paginator(reclamos, 100)
+        page = request.GET.get('page', 1)
+        try:
+            items = paginator.page(page)
+        except (PageNotAnInteger, EmptyPage):
+            items = paginator.page(1)
+
+        reclamos_data = [serialize_reclamo(r) for r in items]
+
+        return JsonResponse({
+            'success': True,
+            'reclamos': reclamos_data,
+            'pagination': {
+                'current_page': items.number,
+                'total_pages': items.paginator.num_pages,
+                'has_previous': items.has_previous(),
+                'has_next': items.has_next(),
+                'previous_page': items.previous_page_number() if items.has_previous() else None,
+                'next_page': items.next_page_number() if items.has_next() else None,
+                'total_items': paginator.count
+            },
+            'filtros_activos': {}
+        })
+
+    # Para todas las vistas excepto deuda, continuar con filtrado normal
+    if vista_tipo not in ['pendientes', 'finalizados', 'seguimiento']:
+        # Restricciones para usuarios GSA
+        if 'gsa-' in user and vista_tipo != 'borradores':
+            base_filters['author__username__startswith'] = 'gsa-'
+
+        # Obtener queryset base
+        reclamos = Reclamo.objects.filter(**base_filters).order_by('-n_de_reclamo')
+
+    # Aplicar filtros de django-filter
+    reclamo_filter = ReclamoFilter(request.GET, queryset=reclamos)
+    filtered_reclamos = reclamo_filter.qs
+
+    # Paginación
+    paginator = Paginator(filtered_reclamos, 100)
+    page = request.GET.get('page', 1)
+
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+
+    # Serializar reclamos
+    reclamos_data = [serialize_reclamo(r) for r in items]
+
+    # Detectar filtros activos
+    filtros_activos = get_filtros_activos(request.GET)
+
+    return JsonResponse({
+        'success': True,
+        'reclamos': reclamos_data,
+        'pagination': {
+            'current_page': items.number,
+            'total_pages': items.paginator.num_pages,
+            'has_previous': items.has_previous(),
+            'has_next': items.has_next(),
+            'previous_page': items.previous_page_number() if items.has_previous() else None,
+            'next_page': items.next_page_number() if items.has_next() else None,
+            'total_items': paginator.count
+        },
+        'filtros_activos': filtros_activos
+    })
+
+
+def serialize_reclamo(reclamo):
+    """Serializa un reclamo a diccionario JSON-compatible."""
+    return {
+        'n_de_reclamo': reclamo.n_de_reclamo,
+        'fecha': reclamo.fecha.strftime('%d-%m-%y') if reclamo.fecha else '-',
+        'tipo_de_reclamo': str(reclamo.tipo_de_reclamo) if reclamo.tipo_de_reclamo else '-',
+        'apellido': reclamo.apellido or '-',
+        'calle': reclamo.calle or '-',
+        'altura': reclamo.altura or '-',
+        'telefono': reclamo.telefono or '-',
+        'detalle': reclamo.detalle or '-',
+        'estado': str(reclamo.estado) if reclamo.estado else '-',
+        'partida': reclamo.partida or '-',
+        'fecha_resolucion': reclamo.fecha_resolucion.strftime('%d-%m-%y') if reclamo.fecha_resolucion else '-',
+        'tarea_realizada': reclamo.tarea_realizada or '-',
+        'operarios': ', '.join([str(op) for op in reclamo.operario_s.all()]),
+        'notificacion': reclamo.notificacion or '-',
+        'comentario': reclamo.comentario or '-',
+    }
+
+
+def get_filtros_activos(get_params):
+    """Extrae filtros activos de GET params para mostrar badges."""
+    filtros = {}
+
+    # Mapeo de parámetros a nombres legibles
+    filter_labels = {
+        'estado': 'Estado',
+        'tipo_de_reclamo': 'Tipo',
+        'fecha_desde': 'Desde',
+        'fecha_hasta': 'Hasta',
+        'busqueda': 'Búsqueda'
+    }
+
+    for param, label in filter_labels.items():
+        value = get_params.get(param)
+        if value:
+            # Para ForeignKeys, obtener el nombre del objeto
+            if param == 'tipo_de_reclamo':
+                try:
+                    tipo = Tipos.objects.get(pk=value)
+                    filtros[param] = {'label': label, 'value': str(tipo), 'param': param}
+                except Tipos.DoesNotExist:
+                    pass
+            elif param == 'estado':
+                try:
+                    estado = Estados.objects.get(pk=value)
+                    filtros[param] = {'label': label, 'value': str(estado), 'param': param}
+                except Estados.DoesNotExist:
+                    pass
+            else:
+                filtros[param] = {'label': label, 'value': value, 'param': param}
+
+    return filtros
 
 
 @login_required

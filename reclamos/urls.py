@@ -57,6 +57,7 @@ urlpatterns = [
     path('datos_partida/', views.info_partida, name='info_partida'),
     path('api/buscar-partidas/', views.buscar_partidas_ajax, name='buscar_partidas_ajax'),
     path('api/toggle-a-reporte/', views.toggle_a_reporte, name='toggle_a_reporte'),
+    path('api/lista-reclamos-ajax/', views.lista_reclamos_ajax, name='lista_reclamos_ajax'),
     re_path(r'^partida/partida-(?P<partida>\w+)/$', views.detalle_partida, name="detalle_partida"),
     path('trabajos/reportes/pend_fin/', views.rep_pend_fin, name='rep_pend_fin'),
     path('trabajos/reportes/tiem_resol/', views.rep_tiem_resol, name='rep_tiem_resol'),

@@ -1,202 +1,149 @@
 {% extends 'reclamos/base.html' %}
+{% load static %}
 
 {% block content %}
 <title>{{ title }}</title>
 <div class="reclamo">
-    <table style="width: 1300; border: 0px solid #ffffff; border-collapse: collapse;">
-        <tr>
-            <td style="width: 65%; border: 0px solid #ffffff; border-collapse: collapse;">
-                <h2>{{ titulo }}</h2>
-            </td>
-            <td style="vertical-align:bottom; border: 0px solid #ffffff; border-collapse: collapse;">
-                <form method="get" class="form-inline">
-                    <table>
-                        <td style="border: 0px solid #ffffff; border-collapse: collapse;">
-                            <div class="form-group mb-2">
-                                {{ filter.form.fecha }}
-                            </div>
-                        </td>
-                        <td style="border: 0px solid #ffffff; border-collapse: collapse;">
-                            <div class="form-group mx-sm-3 mb-2">
-                                {{ filter.form.tipo_de_reclamo }}
-                            </div>
-                        </td>
-                        <td style="border: 0px solid #ffffff; border-collapse: collapse;">
-                            <button type="submit" class="btn btn-primary mb-2">Filtrar</button>
-                        </td>
-                    </table>
-                </form>
-            </td>
-        </tr>
-    </table>
-    <table class="sortable">
-        <tr>
-            <th>
-                <div class="th_fecha">
-                    Fecha
+    <!-- Header con título y contador -->
+    <div class="row lista-header" style="margin-bottom: 20px;">
+        <div class="col-md-6">
+            <h2>{{ titulo }}</h2>
+        </div>
+        <div class="col-md-6 text-right">
+            <div id="contador-resultados" class="badge" style="font-size: 14pt; padding: 8px 15px; background-color: #5bc0de;">
+                <span id="total-items">{{ items.paginator.count }}</span> resultado(s)
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de filtros -->
+    <div class="panel panel-primary filtros-panel" style="margin-bottom: 15px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span class="glyphicon glyphicon-filter"></span> Filtros
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form id="filtro-form" method="get">
+                <input type="hidden" id="vista-tipo" name="vista_tipo" value="{{ vista_tipo }}">
+
+                <!-- Todos los filtros en una sola línea -->
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="id_estado">Estado:</label>
+                        {{ filter.form.estado }}
+                    </div>
+                    <div class="col-md-2">
+                        <label for="id_tipo_de_reclamo">Tipo:</label>
+                        {{ filter.form.tipo_de_reclamo }}
+                    </div>
+                    <div class="col-md-2">
+                        <label for="id_fecha_desde">Desde:</label>
+                        {{ filter.form.fecha_desde }}
+                    </div>
+                    <div class="col-md-2">
+                        <label for="id_fecha_hasta">Hasta:</label>
+                        {{ filter.form.fecha_hasta }}
+                    </div>
+                    <div class="col-md-3">
+                        <label for="id_busqueda">Búsqueda:</label>
+                        {{ filter.form.busqueda }}
+                    </div>
+                    <div class="col-md-1 text-center" style="padding-top: 20px;">
+                        <button type="button" id="limpiar-filtros" class="btn btn-warning btn-sm" title="Limpiar filtros">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </div>
                 </div>
-            </th>
-            <th>
-                <div class="th_tipo">
-                    Tipo de Trabajo
-                </div>
-            </th>
-            <th>
-                <div class="th_apellido">
-                    Apellido
-                </div>
-            </th>
-            <th>
-                <div class="th_calle">
-                    Calle
-                </div>
-            </th>
-            <th>
-                <div class="th_altura">
-                    Altura
-                </div>
-            </th>
-            <th>
-                <div class="th_telefono">
-                    Teléfono
-                </div>
-            </th>
-            <th>
-                <div class="th_detalle">
-                    Detalle
-                </div>
-            </th>
-            <th>
-                <div class="th_estado">
-                    Estado
-                </div>
-            </th>
-            <th>
-                <div class="th_partida">
-                    Partida
-                </div>
-            </th>
-            <th>
-                <div class="th_fecha_resol">
-                    Fecha Resoluc.
-                </div>
-            </th>
-            <th>
-                <div class="th_tarea">
-                    Tarea Realizada
-                </div>
-            </th>
-            <th>
-                <div class="th_operario">
-                    Operario/s
-                </div>
-            </th>
-            <th>
-                <div class="th_notificacion">
-                    Notificación
-                </div>
-            </th>
-            <th>
-                <div class="th_comentario">
-                    Comentario
-                </div>
-            </th>
-        </tr>
-        {% for reclamo in items %}
-        <tr>
-            <td>
-                <div class="td_fecha">
-                    {{ reclamo.fecha|date:'d-m-y'|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_tipo">
-                    <a href="{% url 'detalle_reclamo' pk=reclamo.n_de_reclamo %}">{{ reclamo.tipo_de_reclamo|default_if_none:"-" }}</a>
-                </div>
-            </td>
-            <td>
-                <div class="td_apellido">
-                    {{ reclamo.apellido|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_calle">
-                    {{ reclamo.calle|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_altura">
-                    {{ reclamo.altura|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_telefono">
-                    {{ reclamo.telefono|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_detalle">
-                    {{ reclamo.detalle|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_estado">
-                    {{ reclamo.estado|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_partida">
-                    <a href="{% url 'detalle_partida' partida=reclamo.partida %}">{{ reclamo.partida|default_if_none:"-" }}</a>
-                </div>
-            </td>
-            <td>
-                <div class="td_fecha_resol">
-                    {{ reclamo.fecha_resolucion|default_if_none:"-"|date:'d-m-y' }}
-                </div>
-            </td>
-            <td>
-                <div class="td_tarea">
-                    {{ reclamo.tarea_realizada|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_operario">
-                    {% for operario in reclamo.operario_s.all %}
-                        {{ operario }},
-                    {% endfor %}
-                </div>
-            </td>
-            <td>
-                <div class="td_notificacion">
-                    {{ reclamo.notificacion|default_if_none:"-" }}
-                </div>
-            </td>
-            <td>
-                <div class="td_comentario">
-                    {{ reclamo.comentario|default_if_none:"-" }}
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <!-- Pagination -->
-    <div class="pagination">
+            </form>
+        </div>
+    </div>
+
+    <!-- Badges de filtros activos -->
+    <div id="filtros-activos-container" style="margin-bottom: 15px; min-height: 30px;"></div>
+
+    <!-- Indicador de carga -->
+    <div id="loading-indicator" style="display: none; text-align: center; padding: 20px;">
+        <div class="alert alert-info">
+            <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+            Cargando resultados...
+        </div>
+    </div>
+
+    <!-- Tabla de resultados -->
+    <div id="tabla-container">
+        <table class="sortable" id="tabla-reclamos">
+            <thead>
+                <tr>
+                    <th><div class="th_fecha">Fecha</div></th>
+                    <th><div class="th_tipo">Tipo de Trabajo</div></th>
+                    <th><div class="th_apellido">Apellido</div></th>
+                    <th><div class="th_calle">Calle</div></th>
+                    <th><div class="th_altura">Altura</div></th>
+                    <th><div class="th_telefono">Teléfono</div></th>
+                    <th><div class="th_detalle">Detalle</div></th>
+                    <th><div class="th_estado">Estado</div></th>
+                    <th><div class="th_partida">Partida</div></th>
+                    <th><div class="th_fecha_resol">Fecha Resoluc.</div></th>
+                    <th><div class="th_tarea">Tarea Realizada</div></th>
+                    <th><div class="th_operario">Operario/s</div></th>
+                    <th><div class="th_notificacion">Notificación</div></th>
+                    <th><div class="th_comentario">Comentario</div></th>
+                </tr>
+            </thead>
+            <tbody id="tabla-body">
+                {% for reclamo in items %}
+                <tr>
+                    <td><div class="td_fecha">{{ reclamo.fecha|date:'d-m-y'|default_if_none:"-" }}</div></td>
+                    <td><div class="td_tipo">
+                        <a href="{% url 'detalle_reclamo' pk=reclamo.n_de_reclamo %}">{{ reclamo.tipo_de_reclamo|default_if_none:"-" }}</a>
+                    </div></td>
+                    <td><div class="td_apellido">{{ reclamo.apellido|default_if_none:"-" }}</div></td>
+                    <td><div class="td_calle">{{ reclamo.calle|default_if_none:"-" }}</div></td>
+                    <td><div class="td_altura">{{ reclamo.altura|default_if_none:"-" }}</div></td>
+                    <td><div class="td_telefono">{{ reclamo.telefono|default_if_none:"-" }}</div></td>
+                    <td><div class="td_detalle">{{ reclamo.detalle|default_if_none:"-" }}</div></td>
+                    <td><div class="td_estado">{{ reclamo.estado|default_if_none:"-" }}</div></td>
+                    <td><div class="td_partida">
+                        <a href="{% url 'detalle_partida' partida=reclamo.partida %}">{{ reclamo.partida|default_if_none:"-" }}</a>
+                    </div></td>
+                    <td><div class="td_fecha_resol">{{ reclamo.fecha_resolucion|default_if_none:"-"|date:'d-m-y' }}</div></td>
+                    <td><div class="td_tarea">{{ reclamo.tarea_realizada|default_if_none:"-" }}</div></td>
+                    <td><div class="td_operario">
+                        {% for operario in reclamo.operario_s.all %}
+                            {{ operario }},
+                        {% endfor %}
+                    </div></td>
+                    <td><div class="td_notificacion">{{ reclamo.notificacion|default_if_none:"-" }}</div></td>
+                    <td><div class="td_comentario">{{ reclamo.comentario|default_if_none:"-" }}</div></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div id="pagination-container" class="pagination" style="margin-top: 20px;">
         <span class="step-links">
             {% if items.has_previous %}
-                <a href="?page=1{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">« primera</a>
-                <a href="?page={{ items.previous_page_number }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">anterior</a>
+                <a href="#" class="pagination-link" data-page="1">« primera</a>
+                <a href="#" class="pagination-link" data-page="{{ items.previous_page_number }}">anterior</a>
             {% endif %}
 
             <span class="current">
-                | P&aacute;gina {{ items.number }} de {{ items.paginator.num_pages }} |
+                | Página <span id="current-page">{{ items.number }}</span> de <span id="total-pages">{{ items.paginator.num_pages }}</span> |
             </span>
 
             {% if items.has_next %}
-                <a href="?page={{ items.next_page_number }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">siguiente</a>
-                <a href="?page={{ items.paginator.num_pages }}{% if request.GET.fecha %}&fecha={{ request.GET.fecha }}{% endif %}{% if request.GET.tipo_de_reclamo %}&tipo_de_reclamo={{ request.GET.tipo_de_reclamo }}{% endif %}">&uacute;ltima »</a>
+                <a href="#" class="pagination-link" data-page="{{ items.next_page_number }}">siguiente</a>
+                <a href="#" class="pagination-link" data-page="{{ items.paginator.num_pages }}">última »</a>
             {% endif %}
         </span>
     </div>
 </div>
 <br><br><br><br>
+{% endblock %}
+
+{% block additional_scripts %}
+<script src="{% static 'js/lista_reclamos_ajax.js' %}"></script>
 {% endblock %}
