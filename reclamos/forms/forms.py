@@ -21,6 +21,12 @@ class ReclamoForm(forms.ModelForm):
         widgets = {'fecha': forms.SelectDateWidget(years=YEARS),
                    'fecha_resolucion': forms.SelectDateWidget(years=YEARS)}
 
+    def __init__(self, *args, **kwargs):
+        """Inicializa el formulario con tipos ordenados alfabéticamente."""
+        super().__init__(*args, **kwargs)
+        from reclamos.models import Tipos
+        self.fields['tipo_de_reclamo'].queryset = Tipos.objects.all().order_by('tipo')
+
 
 class FavaForm(forms.ModelForm):
     """Form de alta FAVA."""
@@ -145,6 +151,12 @@ class FiltroInformePendFinForm(forms.ModelForm):
         widgets = {'fecha_inicio': forms.SelectDateWidget(years=YEARS),
                    'fecha_fin': forms.SelectDateWidget(years=YEARS)}
 
+    def __init__(self, *args, **kwargs):
+        """Inicializa el formulario con tipos ordenados alfabéticamente."""
+        super().__init__(*args, **kwargs)
+        from reclamos.models import Tipos
+        self.fields['tipo'].queryset = Tipos.objects.all().order_by('tipo')
+
 
 class FiltroInformeTiemResolForm(forms.ModelForm):
     """Form para filtro de reporte."""
@@ -156,6 +168,12 @@ class FiltroInformeTiemResolForm(forms.ModelForm):
         fields = ('fecha_inicio', 'fecha_fin', 'tipo')
         widgets = {'fecha_inicio': forms.SelectDateWidget(years=YEARS),
                    'fecha_fin': forms.SelectDateWidget(years=YEARS)}
+
+    def __init__(self, *args, **kwargs):
+        """Inicializa el formulario con tipos ordenados alfabéticamente."""
+        super().__init__(*args, **kwargs)
+        from reclamos.models import Tipos
+        self.fields['tipo'].queryset = Tipos.objects.all().order_by('tipo')
 
 
 class FiltroListadosTrabajosForm1(forms.ModelForm):
