@@ -10,6 +10,7 @@
 !*.py
 !*.js
 !*.html
+!*.md
 
 # Ignorar archivos estos directorios y archivos especificamente
 migrations/

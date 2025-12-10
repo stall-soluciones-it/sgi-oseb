@@ -70,7 +70,6 @@ class Reclamo(models.Model):
                                  default='Si')
     eliminado = models.CharField(max_length=50, default='Activo')
     borrador = models.CharField(max_length=50, default='No')
-    n_reclamo_gsa = models.CharField(max_length=100)
 
     def guardar(self):
         """Guarda nuevo Reclamo."""
