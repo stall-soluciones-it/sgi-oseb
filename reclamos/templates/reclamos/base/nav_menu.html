@@ -1,20 +1,11 @@
-{% if perms.reclamos.ver_reclamo %}
+{% if perms.reclamos.ver_reclamo or perms.reclamos.gsa %}
     <div class="dropdown">
         <button class="dropbtn">Trabajos <i class="glyphicon glyphicon-triangle-bottom"></i></button>
         <div class="dropdown-content">
             <a href="{% url 'lista_reclamos' %}"><span class="glyphicon glyphicon-tasks"></span> Listado Trabajos</a>
-            {% if perms.reclamos.editar_reclamo %}
+            {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
                 <a href="{% url 'nuevo_reclamo' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo</a>
             {% endif %}
-        </div>
-    </div>
-{% endif %}
-{% if perms.reclamos.gsa %}
-    <div class="dropdown">
-        <button class="dropbtn">Trabajos GSA <i class="glyphicon glyphicon-triangle-bottom"></i></button>
-        <div class="dropdown-content">
-            <a href="{% url 'lista_reclamos' %}"><span class="glyphicon glyphicon-tasks"></span> Listado Trabajos</a>
-            <a href="{% url 'nuevo_reclamo' %}"><span class="glyphicon glyphicon-plus"></span> Nuevo</a>
         </div>
     </div>
 {% endif %}

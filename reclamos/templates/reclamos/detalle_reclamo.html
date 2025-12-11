@@ -4,7 +4,7 @@
 {% if perms.reclamos.ver_reclamo or perms.reclamos.gsa %}
     <title>Detalle Trabajo</title>
     <div class="reclamo">
-        {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
+        {% if user_can_edit %}
             <a class="btn btn-default" href="{% url 'editar_reclamo' pk=reclamo.n_de_reclamo %}"><span class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'eliminar_reclamo' pk=reclamo.n_de_reclamo %}" onclick="return confirm('Eliminar trabajo?')"><span class="glyphicon glyphicon-trash"></span></a>
             <a class="btn btn-default" href="{% url 'imprimir_comprobante_reclamo' pk=reclamo.n_de_reclamo %}" target="_blank"><span class="glyphicon glyphicon-print"></span> Imprimir Comprobante</a>
@@ -56,7 +56,7 @@
             <a href="{% url 'detalle_archivo' pk=archivo.pk %}">{{ archivo.descripcion }} |</a>
         {% endfor %}
         </p>
-        {% if perms.reclamos.editar_reclamo or perms.reclamos.gsa %}
+        {% if user_can_edit %}
             <p><a href="{% url 'carga_archivos' pk=reclamo.n_de_reclamo %}">Cargar nuevo archivo</a></p>
         {% endif %}
     </div>

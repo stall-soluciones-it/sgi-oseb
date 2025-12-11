@@ -81,6 +81,28 @@ class Reclamo(models.Model):
         self.eliminado = 'Eliminado'
         self.save()
 
+    def is_author_gsa(self):
+        """
+        Verifica si el autor del reclamo pertenece al grupo GSA.
+
+        Returns:
+            bool: True si el author está en el grupo GSA
+        """
+        return self.author.groups.filter(name='GSA').exists()
+
+    def user_can_edit(self, user):
+        """
+        Verifica si un usuario específico puede editar este reclamo.
+
+        Args:
+            user: Usuario Django
+
+        Returns:
+            bool: True si el usuario puede editar este reclamo
+        """
+        from reclamos.permissions import user_can_edit_reclamo
+        return user_can_edit_reclamo(user, self)
+
     def __str__(self):
         """Devuelve id_rec como str."""
         id_rec = (str(self.n_de_reclamo) + ' / ' + str(self.apellido) +

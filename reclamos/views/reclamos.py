@@ -1,5 +1,12 @@
 """Reclamos."""
 from django.contrib.auth.decorators import login_required
+from reclamos.permissions import (
+    require_view_permission,
+    require_create_permission,
+    require_reclamo_edit_permission,
+    require_reclamo_delete_permission,
+    user_can_edit_reclamo,
+)
 import os
 import datetime
 import copy
@@ -96,22 +103,11 @@ class ReclamoFilter(django_filters.FilterSet):
 
 # <TRABAJOS>
 @login_required
+@require_view_permission
 def lista_reclamos(request):
     """Devuelve listado completo de reclamos."""
     title = 'Trabajos - Completo'
-    user = str(request.user)
-    if 'gsa-' in user:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No', eliminado='Activo',  # noqa
-                                               author__username__startswith='gsa-').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No', eliminado='Activo',  # noqa
-                                               author__username__startswith='gsa-').order_by('-n_de_reclamo'))
-    else:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No', eliminado='Activo').order_by('-n_de_reclamo'))  # noqa
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No', eliminado='Activo').order_by('-n_de_reclamo'))  # noqa
+    reclamos = Reclamo.objects.filter(borrador='No', eliminado='Activo').order_by('-n_de_reclamo')
 
     reclamo_filter = ReclamoFilter(request.GET, queryset=reclamos)
     filtered_reclamos = reclamo_filter.qs
@@ -165,30 +161,13 @@ def lista_reclamos_borradores(request):
 
 
 @login_required
+@require_view_permission
 def lista_reclamos_pendientes(request):
     """Muestra listado de reclamos pendientes."""
     title = 'Pendientes - Trabajos'
-    user = str(request.user)
-    if 'gsa-' in user:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No',  # noqa
-                                               estado__estado__in=['Pendiente', 'Deuda Vigente'],
-                                               eliminado='Activo',
-                                               author__username__startswith='gsa-').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No',  # noqa
-                                               estado__estado__in=['Pendiente', 'Deuda Vigente'],
-                                               eliminado='Activo', author__username__startswith='gsa-')
-                        .order_by('-n_de_reclamo'))
-    else:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No',  # noqa
-                                               estado__estado__in=['Pendiente', 'Deuda Vigente'],
-                                               eliminado='Activo').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No',  # noqa
-                                               estado__estado__in=['Pendiente', 'Deuda Vigente'],
-                                               eliminado='Activo').order_by('-n_de_reclamo'))
+    reclamos = (Reclamo.objects.filter(borrador='No',
+                                       estado__estado__in=['Pendiente', 'Deuda Vigente'],
+                                       eliminado='Activo').order_by('-n_de_reclamo'))
 
     reclamo_filter = ReclamoFilter(request.GET, queryset=reclamos)
     filtered_reclamos = reclamo_filter.qs
@@ -212,27 +191,12 @@ def lista_reclamos_pendientes(request):
 
 
 @login_required
+@require_view_permission
 def lista_reclamos_finalizados(request):
     """Muestra listado de reclamos finalizados."""
     title = 'Finalizados - Trabajos'
-    user = str(request.user)
-    if 'gsa-' in user:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Finalizado',  # noqa
-                                               eliminado='Activo',
-                                               author__username__startswith='gsa-').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Finalizado',  # noqa
-                                               eliminado='Activo', author__username__startswith='gsa-')
-                        .order_by('-n_de_reclamo'))
-    else:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Finalizado',  # noqa
-                                               eliminado='Activo').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Finalizado',  # noqa
-                                               eliminado='Activo')
-                        .order_by('-n_de_reclamo'))
+    reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Finalizado',
+                                       eliminado='Activo').order_by('-n_de_reclamo'))
 
     reclamo_filter = ReclamoFilter(request.GET, queryset=reclamos)
     filtered_reclamos = reclamo_filter.qs
@@ -256,27 +220,12 @@ def lista_reclamos_finalizados(request):
 
 
 @login_required
+@require_view_permission
 def lista_reclamos_seguimiento(request):
     """Muestra listado de reclamos seguimiento."""
     title = 'Seguimiento - Trabajos'
-    user = str(request.user)
-    if 'gsa-' in user:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Seguimiento / Finalizado',  # noqa
-                                               eliminado='Activo',
-                                               author__username__startswith='gsa-').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Seguimiento / Finalizado',  # noqa
-                                               eliminado='Activo', author__username__startswith='gsa-')
-                        .order_by('-n_de_reclamo'))
-    else:
-        try:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Seguimiento / Finalizado',  # noqa
-                                               eliminado='Activo').order_by('-n_de_reclamo'))
-        except ValueError:
-            reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Seguimiento / Finalizado',  # noqa
-                                               eliminado='Activo')
-                        .order_by('-n_de_reclamo'))
+    reclamos = (Reclamo.objects.filter(borrador='No', estado__estado='Seguimiento / Finalizado',
+                                       eliminado='Activo').order_by('-n_de_reclamo'))
 
     reclamo_filter = ReclamoFilter(request.GET, queryset=reclamos)
     filtered_reclamos = reclamo_filter.qs
@@ -348,11 +297,11 @@ def lista_reclamos_deuda(request):
 
 
 @login_required
+@require_view_permission
 def lista_reclamos_ajax(request):
     """Endpoint AJAX para filtrado dinámico de reclamos."""
     # Obtener tipo de vista desde parámetro
     vista_tipo = request.GET.get('vista_tipo', 'completo')
-    user = str(request.user)
 
     # Determinar queryset base según tipo de vista
     base_filters = {'borrador': 'No', 'eliminado': 'Activo'}
@@ -365,28 +314,19 @@ def lista_reclamos_ajax(request):
             borrador='No',
             estado__estado__in=['Pendiente', 'Deuda Vigente'],
             eliminado='Activo'
-        )
-        if 'gsa-' in user:
-            reclamos = reclamos.filter(author__username__startswith='gsa-')
-        reclamos = reclamos.order_by('-n_de_reclamo')
+        ).order_by('-n_de_reclamo')
     elif vista_tipo == 'finalizados':
         reclamos = Reclamo.objects.filter(
             borrador='No',
             estado__estado='Finalizado',
             eliminado='Activo'
-        )
-        if 'gsa-' in user:
-            reclamos = reclamos.filter(author__username__startswith='gsa-')
-        reclamos = reclamos.order_by('-n_de_reclamo')
+        ).order_by('-n_de_reclamo')
     elif vista_tipo == 'seguimiento':
         reclamos = Reclamo.objects.filter(
             borrador='No',
             estado__estado='Seguimiento / Finalizado',
             eliminado='Activo'
-        )
-        if 'gsa-' in user:
-            reclamos = reclamos.filter(author__username__startswith='gsa-')
-        reclamos = reclamos.order_by('-n_de_reclamo')
+        ).order_by('-n_de_reclamo')
     elif vista_tipo == 'deuda':
         # Vista deuda es especial, usa chain
         filtro_estado = Reclamo.objects.filter(
@@ -431,10 +371,6 @@ def lista_reclamos_ajax(request):
 
     # Para todas las vistas excepto deuda, continuar con filtrado normal
     if vista_tipo not in ['pendientes', 'finalizados', 'seguimiento']:
-        # Restricciones para usuarios GSA
-        if 'gsa-' in user and vista_tipo != 'borradores':
-            base_filters['author__username__startswith'] = 'gsa-'
-
         # Obtener queryset base
         reclamos = Reclamo.objects.filter(**base_filters).order_by('-n_de_reclamo')
 
@@ -532,6 +468,7 @@ def get_filtros_activos(get_params):
 
 
 @login_required
+@require_create_permission
 def nuevo_reclamo(request):
     """Crea nuevo reclamo."""
     if request.method == "POST":
@@ -552,6 +489,7 @@ def nuevo_reclamo(request):
 
 
 @login_required
+@require_create_permission
 def nuevo_reclamo_r(request):
     """Crea nuevo reclamo."""
     if request.method == "POST":
@@ -572,6 +510,7 @@ def nuevo_reclamo_r(request):
 
 
 @login_required
+@require_reclamo_edit_permission
 def editar_reclamo(request, pk):
     """Edita reclamo existente."""
     reclamo = get_object_or_404(Reclamo, pk=pk)
@@ -589,6 +528,7 @@ def editar_reclamo(request, pk):
 
 
 @login_required
+@require_reclamo_edit_permission
 def grabar_reclamo(request, pk):  # noqa
     """Guarda reclamo como definitivo (sale de borradores)."""
     reclamo = get_object_or_404(Reclamo, pk=pk)
@@ -597,6 +537,7 @@ def grabar_reclamo(request, pk):  # noqa
 
 
 @login_required
+@require_reclamo_delete_permission
 def eliminar_reclamo(request, pk):  # noqa
     """Elimina reclamo."""
     reclamo = get_object_or_404(Reclamo, pk=pk)
@@ -605,10 +546,16 @@ def eliminar_reclamo(request, pk):  # noqa
 
 
 @login_required
+@require_view_permission
 def detalle_reclamo(request, pk):
     """Muestra detalle del reclamo."""
     reclamo = get_object_or_404(Reclamo, pk=pk)
-    return render(request, 'reclamos/detalle_reclamo.html', {'reclamo': reclamo})
+    # Verificar si el usuario puede editar este reclamo específico
+    user_can_edit = user_can_edit_reclamo(request.user, reclamo)
+    return render(request, 'reclamos/detalle_reclamo.html', {
+        'reclamo': reclamo,
+        'user_can_edit': user_can_edit
+    })
 # </RECLAMOS>
 
 
@@ -1214,6 +1161,7 @@ def imprimir_cuadrilla_serv_med(request):
 
 # <ARCHIVOS>
 @login_required
+@require_reclamo_edit_permission
 def carga_archivos(request, pk):
     """Cargar archivos asociados a un reclamo."""
     reclamo = get_object_or_404(Reclamo, pk=pk)
@@ -1240,7 +1188,18 @@ def detalle_archivo(request, pk):
 @login_required
 def eliminar_archivo(request, pk):  # noqa
     """Elimina archivo ya cargado."""
+    from django.core.exceptions import PermissionDenied
+
     archivo = get_object_or_404(Archivos, pk=pk)
+    reclamo_obj = archivo.reclamo
+
+    # Verificar permisos antes de eliminar
+    if not user_can_edit_reclamo(request.user, reclamo_obj):
+        raise PermissionDenied(
+            "No tienes permiso para eliminar archivos de este reclamo. "
+            "Los usuarios GSA solo pueden editar reclamos creados por otros usuarios GSA."
+        )
+
     reclamo = str(archivo.reclamo)
     nreclamo = reclamo[0:int(reclamo.find(' '))]
     archivo.delete()
