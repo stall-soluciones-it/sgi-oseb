@@ -252,40 +252,41 @@ Las siguientes vistas usan el cache local en lugar de consultas directas a SISA:
 
 ## Trabajo en Progreso
 
-### Diciembre 2025 - Refactorización Sistema de Permisos GSA (EN PROGRESO)
-
-**Plan completo**: `/home/cthlh/.claude/plans/cached-tinkering-harp.md`
-
-**Objetivo**: Migrar el sistema GSA de verificación basada en nombres de usuario a un sistema basado en permisos Django y grupos.
-
-**Cambios completados**:
-- ✅ Campo `n_reclamo_gsa` eliminado del modelo Reclamo (línea 73)
-
-**Pendiente (usuario ejecutará)**:
-- ⏸️ Crear y aplicar migración: `python manage.py makemigrations reclamos -n remove_n_reclamo_gsa && python manage.py migrate`
-
-**Próximos pasos**:
-- Fase 2: Crear módulo `reclamos/permissions.py` con decoradores de permisos
-- Fase 3: Agregar métodos `is_author_gsa()` y `user_can_edit()` al modelo Reclamo
-- Fase 4: Actualizar 11+ vistas en `reclamos/views/reclamos.py`:
-  - Eliminar filtros basados en `'gsa-' in user`
-  - Agregar decoradores de permisos server-side
-  - Pasar contexto `user_can_edit` a templates
-- Fase 5: Actualizar templates:
-  - Eliminar sección "Trabajos GSA" de nav_menu.html
-  - Usar variable contexto en detalle_reclamo.html
-- Fase 6: Eliminar comando `carga_reclamos_gsa.py`
-
-**Nueva lógica de permisos**:
-- CREATE: `editar_reclamo` OR `gsa`
-- VIEW: `ver_reclamo` OR `gsa` (ven TODOS los reclamos)
-- EDIT/DELETE: `editar_reclamo` (cualquier reclamo) OR `gsa` + author en grupo GSA
-
-**Problema de seguridad corregido**: Se agregará validación server-side (actualmente solo hay checks en templates).
+*No hay tareas en progreso actualmente.*
 
 ---
 
 ## Actividad de Desarrollo Reciente
+
+### Diciembre 2025 - Refactorización Sistema de Permisos GSA (COMPLETADO)
+
+**Objetivo completado**: Sistema GSA migrado de verificación basada en nombres de usuario a sistema basado en permisos Django y grupos.
+
+**Cambios implementados**:
+- ✅ Eliminado campo `n_reclamo_gsa` del modelo Reclamo
+- ✅ Creado módulo `reclamos/permissions.py` con decoradores y funciones helper
+  - Decoradores: `@require_view_permission`, `@require_create_permission`, `@require_reclamo_edit_permission`, `@require_reclamo_delete_permission`
+  - Funciones: `user_can_view_reclamos()`, `user_can_create_reclamo()`, `user_can_edit_reclamo()`, `user_can_delete_reclamo()`
+- ✅ Agregados métodos al modelo Reclamo: `is_author_gsa()`, `user_can_edit()`
+- ✅ Actualizadas 13 vistas en `reclamos/views/reclamos.py`:
+  - 5 vistas de lista: eliminados filtros `'gsa-' in username`, todos los usuarios ven todos los reclamos
+  - 2 vistas de creación: agregado `@require_create_permission`
+  - 3 vistas de edición: agregado `@require_reclamo_edit_permission`
+  - 2 vistas de eliminación: agregado `@require_reclamo_delete_permission`
+  - 1 vista de detalle: agregado `@require_view_permission` y contexto `user_can_edit`
+- ✅ Actualizados templates:
+  - `nav_menu.html`: eliminado menú "Trabajos GSA", GSA ahora usa menú "Trabajos" principal
+  - `detalle_reclamo.html`: usa variable `user_can_edit` en lugar de checks de permisos
+- ✅ Eliminado comando `carga_reclamos_gsa.py` y referencias en `general.py`
+
+**Nueva lógica de permisos**:
+- **Ver**: `ver_reclamo` OR `gsa` (ven TODOS los reclamos)
+- **Crear**: `editar_reclamo` OR `gsa`
+- **Editar/Eliminar**: `editar_reclamo` (cualquier reclamo) OR `gsa` + author en grupo GSA
+
+**Mejora de seguridad**: Validación server-side implementada (antes solo había checks en templates).
+
+**Nota**: Ya NO es necesario que usuarios GSA tengan nombres con prefijo `'gsa-'`. Solo necesitan pertenecer al grupo Django "GSA".
 
 ### Diciembre 2025 - Optimización de Rendimiento y Mejoras UI
 - **Sistema de cache z80unidad:** Implementado cache local de tabla z80unidad para reducir latencia
